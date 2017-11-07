@@ -5,7 +5,8 @@ source config/environment.sh
 echo "Luodaan projektikansio..."
 
 # Luodaan projektin kansio
-ssh $USERNAME@users2017.cs.helsinki.fi "
+# ssh $USERNAME@users2017.cs.helsinki.fi "
+ssh users "
 cd htdocs
 touch favicon.ico
 mkdir $PROJECT_FOLDER
@@ -28,7 +29,8 @@ echo "Valmis!"
 echo "Asetetaan käyttöoikeudet ja asennetaan Composer..."
 
 # Asetetaan oikeudet ja asennetaan Composer
-ssh $USERNAME@users2017.cs.helsinki.fi "
+# ssh $USERNAME@users2017.cs.helsinki.fi "
+ssh users "
 chmod a+x htdocs/$PROJECT_FOLDER
 chmod a+r htdocs/$PROJECT_FOLDER/.htaccess
 chmod -R a+r htdocs/$PROJECT_FOLDER/assets
