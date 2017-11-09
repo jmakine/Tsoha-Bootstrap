@@ -1,0 +1,144 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Tehtävälista</h1>
+
+<p>
+    <a href="#" class="btn btn-success">Lisää tehtävä</a>
+</p>
+
+<!--
+<h4>Valitse tehtävän tärkeys:</h4>
+<p> <select name="Luokka" multiple="multiple">
+        <option value="high">Korkea</option>
+        <option value="medium">Keskitaso</option>
+        <option value="matala">Matala</option>
+    </select>
+</p>
+-->
+
+<table id="myTable" class="table table-striped table-bordered">
+    <thead>
+        <tr>
+            <th>Nimi</th>
+            <th>Tärkeys
+                <select id='filterText' style='display:inline-block' onchange='filterText()'>
+                    <option disabled selected>Select</option>
+                    <option value='yes'>Kriittinen</option>
+                    <option value='no'>Korkea</option>
+                    <option value='all'>Normaali</option>
+                </select>
+            </th>
+            <th onclick="sortTable(2)">Määräpäivä</th>
+            <th onclick="sortTable(3)">Lisätty</th>
+            <th>Luokka <input type="text" id="myInput" onkeyup="myFunction()" placeholder="Luokan nimi" title="Type in a name"> </th>
+            <th></th>
+            <th></th>
+        </tr>
+    </thead>
+
+    <tbody>
+        <!-- Listataan pelit tähän -->
+        <tr>
+            <td><a href="#">Kastele kukat</a></td>           
+            <td><label class="label label-danger">Korkea</label></td>
+            <td>11.11.2017</td>         
+            <td>7.11.2017</td>
+            <td><a href="#">Arkiaskareet</a> </td>
+            <th><a class="btn btn-default btn-sm" href="#">Muokkaa</a></th>
+            <th><a class="btn btn-default btn-sm" href="#">Poista</a></th>
+        </tr>
+    </tbody>
+</table>
+
+<script>
+function myFunction() {
+  var input, filter, table, tr, td, i;
+  input = document.getElementById("myInput");
+  filter = input.value.toUpperCase();
+  table = document.getElementById("myTable");
+  tr = table.getElementsByTagName("tr");
+  for (i = 0; i < tr.length; i++) {
+    td = tr[i].getElementsByTagName("td")[0];
+    if (td) {
+      if (td.innerHTML.toUpperCase().indexOf(filter) > -1) {
+        tr[i].style.display = "";
+      } else {
+        tr[i].style.display = "none";
+      }
+    }       
+  }
+}
+
+function filterText()
+	{  
+		var rex = new RegExp($('#filterText').val());
+		if(rex =="/all/"){clearFilter()}else{
+			$('.content').hide();
+			$('.content').filter(function() {
+			return rex.test($(this).text());
+			}).show();
+	}
+	}
+	
+function clearFilter()
+	{
+		$('.filterText').val('');
+		$('.content').show();
+	}
+        
+function sortTable(n) {
+  var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
+  table = document.getElementById("myTable");
+  switching = true;
+  //Set the sorting direction to ascending:
+  dir = "asc"; 
+  /*Make a loop that will continue until
+  no switching has been done:*/
+  while (switching) {
+    //start by saying: no switching is done:
+    switching = false;
+    rows = table.getElementsByTagName("TR");
+    /*Loop through all table rows (except the
+    first, which contains table headers):*/
+    for (i = 1; i < (rows.length - 1); i++) {
+      //start by saying there should be no switching:
+      shouldSwitch = false;
+      /*Get the two elements you want to compare,
+      one from current row and one from the next:*/
+      x = rows[i].getElementsByTagName("TD")[n]; //eli tämän taulukon kanssa sortataan päivämääriä. Miten toimii?
+      y = rows[i + 1].getElementsByTagName("TD")[n];
+      /*check if the two rows should switch place,
+      based on the direction, asc or desc:*/
+      if (dir == "asc") {
+        if (x > y ) {      
+          //if so, mark as a switch and break the loop:
+          shouldSwitch= true;
+          break;
+        }
+      } else if (dir == "desc") {
+        if (x < y) { 
+          //if so, mark as a switch and break the loop:
+          shouldSwitch= true;
+          break;
+        }
+      }
+    }
+    if (shouldSwitch) {
+      /*If a switch has been marked, make the switch
+      and mark that a switch has been done:*/
+      rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+      switching = true;
+                        //Each time a switch is done, increase this count by 1:
+                        switchcount++;
+                    } else {
+                        /*If no switching has been done AND the direction is "asc",
+                         set the direction to "desc" and run the while loop again.*/
+                        if (switchcount == 0 && dir == "asc") {
+                            dir = "desc";
+                            switching = true;
+                        }
+                    }
+                }
+            }
+</script>
+{% endblock %}

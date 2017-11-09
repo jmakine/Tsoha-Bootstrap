@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Tehtäväluokat</h1>
+
+<p>
+    <a href="#" class="btn btn-success">Lisää luokka</a>
+</p>
+
+<table class="table table-striped table-bordered">
+    
+    <thead>
+        <tr>
+            <th>Nimi</th>
+            <th>Tehtäviä luokassa</th>
+            <th>Lisätty</th>
+            <th>Kuuluu luokkaan</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        <!-- Listataan pelit tähän -->
+        <tr>
+            <td><a href="#">Arkiaskareet</a></td>
+            <td><a href="#">1</a></td>
+            <td>7.11.2017</td>
+            <td><a href="#"></a></td>
+            <th><a class="btn btn-default btn-sm" href="#">Muokkaa luokkaa</a></th>
+            <th><a class="btn btn-default btn-sm" href="#">Poista</a></th>
+        </tr>
+    </tbody>
+</table>
+
+{% endblock %}
