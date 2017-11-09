@@ -1,5 +1,4 @@
 #!/bin/bash
-
 # korvaa tämä omalla käyttäjätunnuksellasi
 USERNAME="jenninen"
 # korvaa tämä haluamallasi kansion nimellä
