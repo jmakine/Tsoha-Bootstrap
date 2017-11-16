@@ -1,31 +1,45 @@
 {% extends "base.html" %}
 {% block content %}
-  <h1>Muokkaa tehtävää: Kastele kukat</h1>
+  <h1>Muokkaa tehtävää: {{tehtava.nimi}}</h1>
 
   <form>
     <div class="form-group">
       <label>Nimi</label>
-      <input type="text" class="form-control" value="Kastele kukat">
+      <input type="text" class="form-control" value="{{tehtava.nimi}}">
     </div>
+      
     <div class="form-group">
       <label>Määräpäivä</label>
-      <input type="text" class="form-control" value="11.11.2017">
+      <input type="text" class="form-control" value="{{tehtava.deadline}}">
     </div>
+      
     <div class="form-group">
       <label>Tärkeys</label>
-      <select>
+      <select> 
+          <option value="kriittinen">Kriittinen</option>
           <option value="korkea">Korkea</option>
           <option value="normaali">Normaali</option>
-          <option value="matala">Matala</option>
-          <option value="tyhja"></option>
+          <option value=""></option>
       </select>
     </div>
+      
     <div class="form-group">
       <label>Kuvaus</label>
       <textarea class="form-control">   
-      Rahapuu tarvitsee taas vettä.
+      {{tehtava.kuvaus}}
       </textarea>
     </div>
+      
+      <div class="form-group">
+      <label>Luokka</label>
+      {% for luokka in luokat %} 
+      <select class="form-control">           
+          <option value="{{luokka.id}}">{{luokka.nimi}}</option>
+          <option value=""></option>
+      </select>
+      {% endfor %}
+    </div>
+      
     <div class="form-group">
       <button type="submit" class="btn btn-primary">Tallenna</button>
     </div>

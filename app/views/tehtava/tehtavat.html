@@ -3,7 +3,7 @@
 <h1>Tehtävälista</h1>
 
 <p>
-    <a href="#" class="btn btn-success">Lisää tehtävä</a>
+    <a href="{{base_path}}/tehtavat/lisaa" class="btn btn-success">Lisää tehtävä</a>
 </p>
 
 <!--
@@ -22,15 +22,16 @@
             <th>Nimi</th>
             <th>Tärkeys
                 <select id='filterText' style='display:inline-block' onchange='filterText()'>
-                    <option disabled selected>Select</option>
-                    <option value='yes'>Kriittinen</option>
-                    <option value='no'>Korkea</option>
-                    <option value='all'>Normaali</option>
+                    <!-- <option disabled selected>Select</option> -->
+                    <option value='all'>Kaikki</option>
+                    <option value='kriittinen'>Kriittinen</option>
+                    <option value='korkea'>Korkea</option>
+                    <option value='normaali'>Normaali</option>
                 </select>
             </th>
-            <th onclick="sortTable(2)">Määräpäivä</th>
-            <th onclick="sortTable(3)">Lisätty</th>
-            <th>Luokka <input type="text" id="myInput" onkeyup="myFunction()" placeholder="Luokan nimi" title="Type in a name"> </th>
+            <th onclick="sortTable(3)">Määräpäivä</th>
+            <th onclick="sortTable(4)">Lisätty</th>
+            <th> <input type="text" id="myInput" onkeyup="myFunction()" placeholder="Luokka" > </th> <!--title="Type in a name"-->
             <th></th>
             <th></th>
         </tr>
@@ -38,18 +39,22 @@
 
     <tbody>
         <!-- Listataan pelit tähän -->
+        {% for tehtava in tehtavat %}
         <tr>
-            <td><a href="#">Kastele kukat</a></td>           
-            <td><label class="label label-danger">Korkea</label></td>
-            <td>11.11.2017</td>         
-            <td>7.11.2017</td>
-            <td><a href="#">Arkiaskareet</a> </td>
-            <th><a class="btn btn-default btn-sm" href="#">Muokkaa</a></th>
+            <td><a href="{{base_path}}/tehtavat/{{tehtava.id}}">{{tehtava.nimi}}</a></td>           
+            <td><label class="label label-danger">{{tehtava.tarkeys}}</label></td>
+            <td>{{tehtava.deadline}}</td>         
+            <td>{{tehtava.lisattypvm}}</td>
+            <td><a href="{{base_path}}/luokat/{{tehtava.luokka}}">{{tehtava.luokka.nimi}}</a> </td> <!--tällä tulee luokan id, miten saa nimen-->
+            <th><a class="btn btn-default btn-sm" href="{{base_path}}/tehtavat/muokkaa/{{tehtava.id}}">Muokkaa</a></th>
             <th><a class="btn btn-default btn-sm" href="#">Poista</a></th>
         </tr>
+        {% endfor %}
     </tbody>
 </table>
 
+
+<!--näkymän sorttaukseen/filtteröintiin, mieti myöhemmin enemmän..-->
 <script>
 function myFunction() {
   var input, filter, table, tr, td, i;
@@ -58,7 +63,7 @@ function myFunction() {
   table = document.getElementById("myTable");
   tr = table.getElementsByTagName("tr");
   for (i = 0; i < tr.length; i++) {
-    td = tr[i].getElementsByTagName("td")[0];
+    td = tr[i].getElementsByTagName("td")[4]; //tässä oli nolla, filtteröi nimen mukaan, nyt 4 on viides sarake, eli luokka
     if (td) {
       if (td.innerHTML.toUpperCase().indexOf(filter) > -1) {
         tr[i].style.display = "";
@@ -97,7 +102,7 @@ function sortTable(n) {
   while (switching) {
     //start by saying: no switching is done:
     switching = false;
-    rows = table.getElementsByTagName("TR");
+    rows = table.getElementsByTagName("tr"); //vai TR
     /*Loop through all table rows (except the
     first, which contains table headers):*/
     for (i = 1; i < (rows.length - 1); i++) {
@@ -105,8 +110,8 @@ function sortTable(n) {
       shouldSwitch = false;
       /*Get the two elements you want to compare,
       one from current row and one from the next:*/
-      x = rows[i].getElementsByTagName("TD")[n]; //eli tämän taulukon kanssa sortataan päivämääriä. Miten toimii?
-      y = rows[i + 1].getElementsByTagName("TD")[n];
+      x = rows[i].getElementsByTagName("td")[n]; //eli tämän taulukon kanssa sortataan päivämääriä. Miten toimii?
+      y = rows[i + 1].getElementsByTagName("td")[n];
       /*check if the two rows should switch place,
       based on the direction, asc or desc:*/
       if (dir == "asc") {

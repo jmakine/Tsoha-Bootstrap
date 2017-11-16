@@ -33,14 +33,22 @@
             <span class="icon-bar"></span>
           </button>
           <!-- Sovelluksen nimi -->
-          <a class="navbar-brand" href="{{base_path}}">Tsoha Bootstrap</a>
+          <!--Ei tarvii tällaista navigointinappia, koska on vain Luokat ja Tehtävät, ei varsinaista etusivua kirjautumisen lisäksi.. :
+          <a class="navbar-brand" href="{{base_path}}">Muistilista</a>-->
         </div>
 
         <div class="collapse navbar-collapse" id="navigation">
           <ul class="nav navbar-nav">
             <!-- Navigaation linkit -->
-            <li><a href="{{base_path}}">Etusivu</a></li>
+            <!--Tehtäviin-->
+            <li><a href="{{base_path}}/tehtavat">Tehtävät</a></li>
           </ul>
+            <ul class="nav navbar-nav">
+                <li><a href="{{base_path}}/luokat">Luokat</a></li>
+            </ul>
+            <ul class="nav navbar-right"> <!-- kun kirjaudutaan ulos -> aukeaa etusivu, missä voi taas kirjautua sisään-->
+                <li><a href="{{base_path}}">Kirjaudu ulos</a></li>
+            </ul>
         </div>
       </div>
     </nav>

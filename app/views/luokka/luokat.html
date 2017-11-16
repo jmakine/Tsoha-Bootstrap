@@ -2,8 +2,9 @@
 {% block content %}
 <h1>Tehtäväluokat</h1>
 
+<!--lisääminen tapahtuu samalla lomakkeella kuin muokkaus, mutta tyhjällä, miten??-->
 <p>
-    <a href="#" class="btn btn-success">Lisää luokka</a>
+    <a href="{{base_path}}/luokat/lisaa" class="btn btn-success">Lisää luokka</a>
 </p>
 
 <table class="table table-striped table-bordered">
@@ -11,22 +12,28 @@
     <thead>
         <tr>
             <th>Nimi</th>
-            <th>Tehtäviä luokassa</th>
-            <th>Lisätty</th>
+            <th>Aliluokkia</th>
+            <th>Tehtäviä</th>
+            <th>Luotu</th>
             <th>Kuuluu luokkaan</th>
+            <th></th>
+            <th></th>
         </tr>
     </thead>
 
     <tbody>
-        <!-- Listataan pelit tähän -->
+        {% for luokka in luokat %} <!--onko tämä se luokat -niminen taulukko nyt, joka annettiin controllerissa näkymän käyttöön?-->
         <tr>
-            <td><a href="#">Arkiaskareet</a></td>
-            <td><a href="#">1</a></td>
-            <td>7.11.2017</td>
-            <td><a href="#"></a></td>
-            <th><a class="btn btn-default btn-sm" href="#">Muokkaa luokkaa</a></th>
+            <td><a href="{{base_path}}/luokat/{{luokka.id}}">{{luokka.nimi}}</a></td> 
+            <!--kun tästä, (aliluokkien lkmäärästä) klikkaa, aukeaa lista aliluokista:-->
+            <td><a href="{{base_path}}/luokat}">{{luokka.aliluokka_count}}</a></td> 
+            <td><a href="{{base_path}}/tehtavat}">{{luokka.tehtavat_count}}</a></td> 
+            <td>{{luokka.luotupvm}}</td>
+            <td><a href="{{base_path}}/luokat/{{Luokka.yliluokka}}"></a></td>
+            <th><a class="btn btn-default btn-sm" href="{{base_path}}/luokat/muokkaa/{{luokka.id}}">Muokkaa luokkaa</a></th>
             <th><a class="btn btn-default btn-sm" href="#">Poista</a></th>
         </tr>
+        {% endfor %}
     </tbody>
 </table>
 

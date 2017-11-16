@@ -1,26 +1,39 @@
 {% extends "base.html" %}
 {% block content %}
-<h1>Arkiaskareet</h1>
+
+<div class="alert alert-success">
+    {{message}}
+</div>
+
+<h1>Luokka: {{luokka.nimi}}</h1>
 <!-- Painikkeet tähän -->
 <p>
-
-    <a href="#" class="btn btn-default">Muokkaa</a> <button class="btn btn-danger">Poista</button> 
-
+    <a href="{{base_path}}/luokat/muokkaa/{{luokka.id}}" class="btn btn-default">Muokkaa</a> <button class="btn btn-danger">Poista</button> 
 </p>
+
+<!-- Kuvaus tulee tähän -->
+<div>
+<p> <strong>Kuvaus:</strong></p>
+<p>{{luokka.kuvaus}}</p>
+</div>
+
 <!-- Tiedot tulee listana tähän -->
 <ul>
-    <li><strong>Kuuluu luokkaan:</strong>-</li>
-    <li><strong>Luotu</strong> 11.11.2017</li>
-    <li><strong>Yhteensä tehtäviä tämän ryhmän alla: </strong><span style="font-size:12pt"><a href="#"> 1</a></span></li>
+    <li><strong>Luotu: </strong>{{luokka.luotupvm}}</li>
+    <li><strong>Kuuluu luokkaan: </strong><a href="{{base_path}}/luokat/{{luokka.yliluokka}}">{{luokka.yliluokka}}</a></li>
+    <li><strong>Yhteensä tehtäviä tämän ryhmän alla: </strong><span style="font-size:12pt"><a href="{{base_path}}/tehtavat?">
+                Tähän lkm ja viittaus tehtävät näkymään, jossa esillä vain nämä tehtävät.</a></span></li>
 </ul>
-<!-- Kuvaus tulee tähän -->
-<p>
-    Tähän luokkaan laitan jotain juttuja, mitkä muuten meinaavat unohtua.
-</p>
 
+<!--tähän lista luokan aliluokista-->
+<div>
 <h4>Sisältää luokat:</h4>
+{% for aliluokka in luokka.aliluokat %}
 
 <ul>
-    <li></li>
+    <li><a href="{{base_path}}/luokat/{{aliluokka.id}}">{{aliluokka.nimi}}</a></li>
 </ul>
+
+{% endfor %}
+</div>
 {% endblock %}
