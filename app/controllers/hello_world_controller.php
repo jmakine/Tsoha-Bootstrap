@@ -1,5 +1,6 @@
 <?php
 
+//require 'app/models/Luokka.php'; ei tarvita, koska Composer.json tiedostossa on classmap taulukossa app/models.
   class HelloWorldController extends BaseController{
 
     public static function index(){
@@ -9,9 +10,15 @@
     }
 
     public static function sandbox(){
-      // Testaa koodiasi täällä
-      //echo 'Hello World!';
-      View::make('helloworld.html');
+    $luokka= Luokka::find(1);
+    $luokat = Luokka::kaikki();
+    $tehtava = Tehtava::find(1);
+    $tehtavat = Tehtava::kaikki();
+    // Kint-luokan dump-metodi tulostaa muuttujan arvon
+    Kint::dump($luokat);
+    Kint::dump($luokka);
+    Kint::dump($tehtava);
+    Kint::dump($tehtavat);
     }
     
     public static function login(){
@@ -41,6 +48,4 @@
     public static function muokkaatehtava(){
         View::make('suunnitelmat/tehtavanmuokkaus.html');
     }
-    
-    
   }
