@@ -3,7 +3,9 @@
 		"classmap": [
 			"config/database.php",
 			"lib",
-			"app/controllers"
+			"app/controllers",
+			"app/models/tehtava.php",
+                        "app/models/luokka.php"
 		]
 	},
 	"require": {
