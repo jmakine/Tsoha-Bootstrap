@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block content %}
+<!--käytössä luokat niminen taulukko luokista, eli kaikki olemassa olevat luokat-->
+
+  <h1>Lisää uusi luokka</h1>
+
+  <form method="post" action="{{base_path}}/luokat">
+    <div class="form-group">
+      <label>Nimi</label>
+      <input type="text" class="form-control" name="nimi">
+    </div>
+      
+    <div class="form-group">
+      <label>Yliluokka</label>
+      <!--{% for luokka in luokat % }-->
+      <select name="yliluokka" class="form-control">
+          <option value="luokka1">luokka1</option>     
+          <option value="luokka2">luokka2</option>
+      </select>
+        <!--{% endfor % }-->
+    </div>
+      
+    <div class="form-group">
+      <label>Kuvaus</label>
+      <input type="text" name="kuvaus" class="form-control">
+    </div>
+      
+    <div class="form-group">
+      <button type="submit" class="btn btn-primary">Lisää</button>
+    </div>
+  </form>
+{% endblock %}
