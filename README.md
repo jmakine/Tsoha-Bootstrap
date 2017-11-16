@@ -8,8 +8,8 @@ Yleisiä linkkejä:
 * [Tehtäväluokat](http://jenninen.users.cs.helsinki.fi/tsoha/luokat)
 * [Yksittäisen tehtävä näkymä](http://jenninen.users.cs.helsinki.fi/tsoha/tehtavat/1)
 * [Yksittäisen tehtäväluokan näkymä](http://jenninen.users.cs.helsinki.fi/tsoha/luokat/1)
-* [Tehtävän lisäys -lomake] (http://jenninen.users.cs.helsinki.fi/tsoha/tehtavat/lisaa)
-* [Tehtäväluokan lisays -lomake] (http://jenninen.users.cs.helsinki.fi/tsoha/luokat/lisaa)
+* [Tehtävän lisäys -lomake](http://jenninen.users.cs.helsinki.fi/tsoha/tehtavat/lisaa)
+* [Tehtäväluokan lisays -lomake](http://jenninen.users.cs.helsinki.fi/tsoha/luokat/lisaa)
 
 ## Työn aihe
 
