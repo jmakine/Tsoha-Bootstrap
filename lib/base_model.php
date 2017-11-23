@@ -1,6 +1,7 @@
 <?php
 
   class BaseModel{
+
     // "protected"-attribuutti on käytössä vain luokan ja sen perivien luokkien sisällä
     protected $validators;
 
@@ -13,14 +14,18 @@
           $this->{$attribute} = $value;
         }
       }
-    }
-
+    } 
+    
+    //käy läpi validators-taulukon ja kutsuu sen sisältämiä validointimetodeja niiden nimellä.
     public function errors(){
       // Lisätään $errors muuttujaan kaikki virheilmoitukset taulukkona
       $errors = array();
 
       foreach($this->validators as $validator){
         // Kutsu validointimetodia tässä ja lisää sen palauttamat virheet errors-taulukkoon
+          $validator_errors = $this->{$validator}();          
+          $errors = array_merge($errors, $validator_errors);
+
       }
 
       return $errors;
