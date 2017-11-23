@@ -1,8 +1,16 @@
 {% extends "base.html" %}
 {% block content %}
+
+{% if message %}
+
+<div class="alert alert-info">
+    {{message}}
+</div>
+
+{% endif %}
+
 <h1>Tehtäväluokat</h1>
 
-<!--lisääminen tapahtuu samalla lomakkeella kuin muokkaus, mutta tyhjällä, miten??-->
 <p>
     <a href="{{base_path}}/luokat/lisaa" class="btn btn-success">Lisää luokka</a>
 </p>
@@ -22,19 +30,24 @@
     </thead>
 
     <tbody>
-        {% for luokka in luokat %} <!--onko tämä se luokat -niminen taulukko nyt, joka annettiin controllerissa näkymän käyttöön?-->
+        {% for luokka in luokat %} 
         <tr>
             <td><a href="{{base_path}}/luokat/{{luokka.id}}">{{luokka.nimi}}</a></td> 
             <!--kun tästä, (aliluokkien lkmäärästä) klikkaa, aukeaa lista aliluokista:-->
-            <td><a href="{{base_path}}/luokat}">{{luokka.aliluokka_count}}</a></td> 
-            <td><a href="{{base_path}}/tehtavat}">{{luokka.tehtavat_count}}</a></td> 
+            <td>{{luokka.aliluokka_count}}</a></td> 
+            <td>{{luokka.tehtavat_count}}</a></td> 
             <td>{{luokka.luotupvm}}</td>
-            <td><a href="{{base_path}}/luokat/{{Luokka.yliluokka}}"></a></td>
-            <th><a class="btn btn-default btn-sm" href="{{base_path}}/luokat/muokkaa/{{luokka.id}}">Muokkaa luokkaa</a></th>
-            <th><a class="btn btn-default btn-sm" href="#">Poista</a></th>
-        </tr>
+            <td><a href="{{base_path}}/luokat/{{luokka.yliluokka}}"></a>{{luokka.yliluokka.nimi}}</td> <!--miten pitäisi toimia?-->
+            <th><a class="btn btn-default btn-sm" href="{{base_path}}/luokat/{{luokka.id}}/muokkaa">Muokkaa luokkaa</a></th>
+            <th>
+                <form method="post" action="{{base_path}}/luokat/{{luokka.id}}/poista" style="display: inline-block;">
+                <button type="submit" class="btn btn-danger">Poista</button>
+                </form>
+            </th>
+    </tr>
         {% endfor %}
     </tbody>
+    
 </table>
 
 {% endblock %}

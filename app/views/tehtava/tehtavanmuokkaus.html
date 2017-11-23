@@ -1,47 +1,62 @@
 {% extends "base.html" %}
 {% block content %}
-  <h1>Muokkaa tehtävää: {{tehtava.nimi}}</h1>
+<!--käytössä ('attributes' => $tehtava), ('errors' => $errors) ja ('luokat' => $luokat)-->
 
-  <form>
+{% if errors %}
+<div class="alert alert-danger">
+    <ul>
+        {% for error in errors %}
+        <li>
+            {{error}}
+        </li>
+        {% endfor %}
+    </ul>        
+</div>
+{% endif %}
+
+<h1>Muokkaa tehtävää: {{attributes.nimi}}</h1>
+
+<form method="post" action="{base_path}/tehtavat/{{attributes.id}}/muokkaa">
+
     <div class="form-group">
-      <label>Nimi</label>
-      <input type="text" class="form-control" value="{{tehtava.nimi}}">
+        <label>Nimi</label>
+        <input type="text" name="nimi" class="form-control" value="{{attributes.nimi}}">
     </div>
-      
+
     <div class="form-group">
-      <label>Määräpäivä</label>
-      <input type="text" class="form-control" value="{{tehtava.deadline}}">
+        <label>Määräpäivä</label>
+        <input type="text" name="deadline" class="form-control" value="{{attributes.deadline}}">
     </div>
-      
+
     <div class="form-group">
-      <label>Tärkeys</label>
-      <select> 
-          <option value="kriittinen">Kriittinen</option>
-          <option value="korkea">Korkea</option>
-          <option value="normaali">Normaali</option>
-          <option value=""></option>
-      </select>
+        <label>Tärkeys</label>
+        <select name="tarkeys" class="form-control"> 
+            <option selected value="{{attributes.tarkeys}}">{{attributes.tarkeys}}</option>
+            <option value="matala">Matala</option>
+            <option value="korkea">Korkea</option>
+            <option value="neutraali">Neutraali</option>
+            <option value=""></option>
+        </select>
     </div>
-      
+
     <div class="form-group">
-      <label>Kuvaus</label>
-      <textarea class="form-control">   
-      {{tehtava.kuvaus}}
-      </textarea>
+        <label>Kuvaus</label>
+        <input type="text" class="form-control" name="kuvaus" value="{{attributes.kuvaus}}">
     </div>
-      
-      <div class="form-group">
-      <label>Luokka</label>
-      {% for luokka in luokat %} 
-      <select class="form-control">           
-          <option value="{{luokka.id}}">{{luokka.nimi}}</option>
-          <option value=""></option>
-      </select>
-      {% endfor %}
+
+    <div>
+        <label>Luokka</label>
+        <select name="luokka" class="form-control"> 
+            <option selectedvalue="{{attributes.luokka}}">{{attributes.luokka}}</option>   
+            {% for luokka in luokat %} 
+            <option value="{{luokka.id}}">{{luokka.nimi}}</option>
+            {% endfor %}
+            <option value=""></option>
+        </select>    
     </div>
-      
+
     <div class="form-group">
-      <button type="submit" class="btn btn-primary">Tallenna</button>
+        <button type="submit" class="btn btn-primary">Tallenna</button>
     </div>
-  </form>
+</form>
 {% endblock %}

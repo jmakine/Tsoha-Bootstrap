@@ -1,17 +1,34 @@
 {% extends "base.html" %}
 {% block content %}
   <h1>{{tehtava.nimi}}</h1>
+  
+  {% if message %}
+  
+  <div class="alert alert-success">
+      {{message}}
+  </div>
+  
+  {% endif %}
+  
   <!-- Painikkeet tähän -->
-  <p>
-    <a href="{{base_path}}/tehtavat/muokkaa/{{tehtava.id}}" class="btn btn-default">Muokkaa</a> <button class="btn btn-danger">Poista</button> 
-  </p>
+  <div>
+      
+    <a href="{{base_path}}/tehtavat/{{tehtava.id}}/muokkaa" class="btn btn-default">Muokkaa</a> 
+    
+                <form method="post" action="{{base_path}}/tehtavat/{{tehtava.id}}/poista" style="display: inline-block;">
+                <button type="submit" class="btn btn-danger">Poista</button>
+                </form>
+            
+  </div>
+  
   <!-- Tiedot tulee listana tähän -->
   <ul>
-    <li><strong>Määräpäivä: </strong>{{tehtava.deadline}}</li>
-    <li><strong>Luokka: </strong>{{tehtava.luokka.nimi}}</li>
-    <li><strong>Tärkeys: </strong> <label class="label label-danger">{{tehtava.tarkeys}}</label></li>
-    <li><strong>Lisätty: </strong>{{tehtava.luotupvm}}</li>
+    <li><strong>Määräpäivä: </strong>   {{tehtava.deadline}}</li>
+    <li><strong>Luokka: </strong>   {{luokka.nimi}}</li>
+    <li><strong>Tärkeys: </strong> <label class="label label-danger">   {{tehtava.tarkeys}}</label></li>
+    <li><strong>Lisätty: </strong>   {{tehtava.luotupvm}}</li>
   </ul>
+  
   <!-- Kuvaus tulee tähän -->
   <p>
 {{tehtava.kuvaus}}
