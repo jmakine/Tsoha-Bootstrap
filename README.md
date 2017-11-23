@@ -1,5 +1,8 @@
 ﻿# Tietokantasovelluksen esittelysivu
 
+tunnus: jenni
+salasana: penninen
+
 Yleisiä linkkejä:
 
 * [Linkki sovellukseen](https://jenninen.users.cs.helsinki.fi/tsoha)
