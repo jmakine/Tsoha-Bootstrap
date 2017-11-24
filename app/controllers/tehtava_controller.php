@@ -20,7 +20,8 @@ class TehtavaController extends BaseController {
         self::check_logged_in();
         $tehtava = Tehtava::find($id);
         $luokat = Luokka::kaikki();
-        View::make('tehtava/tehtavanmuokkaus.html', array('attributes' => $tehtava, 'luokat' => $luokat));
+        $luokka = Luokka::find($tehtava->luokka);
+        View::make('tehtava/tehtavanmuokkaus.html', array('attributes' => $tehtava, 'luokat' => $luokat, 'luokka'=>$luokka));
     }
 
     public static function update($id) {

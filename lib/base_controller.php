@@ -17,7 +17,7 @@
 
     public static function check_logged_in(){
     if(!isset($_SESSION['user'])){
-      Redirect::to('/', array('message' => 'Kirjaudu ensin sisään!'));
+      Redirect::to('/', array('message_in' => 'Kirjaudu ensin sisään!'));
     }
   }
   }

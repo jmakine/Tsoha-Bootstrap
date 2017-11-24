@@ -16,11 +16,11 @@
 
 <h1>Muokkaa tehtävää: {{attributes.nimi}}</h1>
 
-<form method="post" action="{base_path}/tehtavat/{{attributes.id}}/muokkaa">
+<form method="post" action="{{base_path}}/tehtavat/{{attributes.id}}/muokkaa">
 
     <div class="form-group">
         <label>Nimi</label>
-        <input type="text" name="nimi" class="form-control" value="{{attributes.nimi}}">
+        <input maxlength="30" type="text" name="nimi" class="form-control" value="{{attributes.nimi}}">
     </div>
 
     <div class="form-group">
@@ -32,24 +32,26 @@
         <label>Tärkeys</label>
         <select name="tarkeys" class="form-control"> 
             <option selected value="{{attributes.tarkeys}}">{{attributes.tarkeys}}</option>
-            <option value="matala">Matala</option>
-            <option value="korkea">Korkea</option>
-            <option value="neutraali">Neutraali</option>
+            <option value="matala">matala</option>
+            <option value="korkea">korkea</option>
+            <option value="neutraali">neutraali</option>
             <option value=""></option>
         </select>
     </div>
 
     <div class="form-group">
         <label>Kuvaus</label>
-        <input type="text" class="form-control" name="kuvaus" value="{{attributes.kuvaus}}">
+        <input maxlength="400" rows="6" type="text" class="form-control" name="kuvaus" value="{{attributes.kuvaus}}">
     </div>
 
-    <div>
+    <div> <!--ei toimi jos luokkaa ei muuta, yrittää update luokan nimen luokka.id:ksi -->
         <label>Luokka</label>
         <select name="luokka" class="form-control"> 
-            <option selectedvalue="{{attributes.luokka}}">{{attributes.luokka}}</option>   
-            {% for luokka in luokat %} 
-            <option value="{{luokka.id}}">{{luokka.nimi}}</option>
+            <option selectedvalue="{{attributes.luokka}}">{{luokka.nimi}}</option>   
+            {% for luokka1 in luokat %} 
+            {% if luokka1 != luokka %}
+            <option value="{{luokka1.id}}">{{luokka1.nimi}}</option>
+            {% endif %}
             {% endfor %}
             <option value=""></option>
         </select>    

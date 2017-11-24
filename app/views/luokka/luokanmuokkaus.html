@@ -16,18 +16,20 @@
   
   <h1>Muokkaa luokkaa: {{attributes.nimi}}</h1>
 
-  <form method="post" action="{base_path}/luokat/{{attributes.id}}/muokkaa">
+  <form method="post" action="{{base_path}}/luokat/{{attributes.id}}/muokkaa">
     <div class="form-group">
       <label>Nimi</label>
-      <input type="text" class="form-control" name="nimi" value="{{attributes.nimi}}">
+      <input maxlength="30" type="text" class="form-control" name="nimi" value="{{attributes.nimi}}">
     </div>
       
     <div>
-        <label class="control-label">Yliuokka</label>
+        <label>Yliluokka</label>
         <select name="yliluokka" class="form-control"> 
-            <option selectedvalue="{{attributes.yliluokka}}">{{attributes.yliluokka.nimi}}</option>   
+            <option selectedvalue="{{attributes.yliluokka}}">{{yliluokka.nimi}}</option>            
             {% for luokka in luokat %} 
-            <option value="{{luokka.id}}">{{luokka.nimi}}</option>
+            {% if luokka != yliluokka and luokka != attributes %}
+            <option value="{{luokka.id}}">{{luokka.nimi}}</option>           
+            {% endif %}
             {% endfor %}
             <option value=""></option>
         </select>    
@@ -35,7 +37,7 @@
         
     <div class="form-group">
       <label>Kuvaus</label>
-      <textarea class="form-control" name="kuvaus" value="{{attributes.kuvaus}}">   
+      <textarea rows=6 maxlength="400" class="form-control" name="kuvaus" value="{{attributes.kuvaus}}">   
       {{attributes.kuvaus}}
       </textarea>
     </div>

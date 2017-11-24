@@ -33,16 +33,18 @@ class Tehtava extends BaseModel {
     public function validate_deadline() {
         $errors = array();
        
-        if ($this->deadline == ""){          
+        /*if ($this->deadline == ""){          
             $this->deadline = null;
             return $errors;
         }
         
+        //$date = DateTime::createFromFormat('j-M-Y', '15-Feb-2009');
+      
          $pvm = explode('.', $this->deadline);
 
         if ($this->deadline != "" && !checkdate($pvm[1], $pvm[0], $pvm[2])) {
             $errors[] = 'Päivämäärä ei kelpaa!';
-        }
+        }*/
         
         return $errors;
     }

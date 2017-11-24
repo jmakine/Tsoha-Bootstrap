@@ -7,10 +7,7 @@ class Luokka extends BaseModel {
     public function __construct($attributes) {
         parent::__construct($attributes);
         $this->validators = array('validate_nimi', 'validate_kuvaus');
-        //$this->aliluokat = $this->aliluokat();
-        //$this->aliluokka_count = count($this->aliluokat);
-        //$this->tehtavat = $this->tehtavat();
-        //$this->tehtavat_count = count($this->tehtavat);
+        
     }
 
     public function validate_nimi() {
@@ -31,16 +28,14 @@ class Luokka extends BaseModel {
         }
         return $errors;
     }
-    
-    //ei varmaan tarvii muita validiointimetodeja, koska kuvaus saa olla tyhjä, yliluokka valitaan listasta ja muut lasketaan/tulee automaattisesti
-    
+   
     public static function kaikki() {
-    // Alustetaan kysely tietokantayhteydellämme (prepare=PDO:n metodi)
-        $kysely = DB::connection()->prepare('SELECT * FROM Luokka WHERE kayttaja_id = :kayttaja_id');
-    //(PDOStatement:n metodeja = excecute ja fetchAll/fetch)
+    
+        $kysely = DB::connection()->prepare(
+                'SELECT id, nimi, kuvaus, luokka_id, luotu_pvm, kayttaja_id FROM Luokka WHERE kayttaja_id = :kayttaja_id ');
+                
         $kysely->execute(array('kayttaja_id'=>$_SESSION['user']));
-    // Kyselyn suorittamisen jälkeen kyselyn tuottamiin riveihin pääsee käsiksi kutsumalla fetchAll-metodia, 
-    // joka palauttaa rivit taulukkona assosiaatiolistoja, jonka avaimina toimivat sarakkeiden nimet ja arvoina niiden sisältö.
+    
         $rows = $kysely->fetchAll();
         $luokat = array();
 
@@ -52,10 +47,10 @@ class Luokka extends BaseModel {
                 'nimi' => $row['nimi'],
                 'kuvaus' => $row['kuvaus'],
                 'yliluokka' => $row['luokka_id'],
-                'luotupvm' => $row['luotu_pvm'],
-                'tehtavat' => self::tehtavat(),
-                //'tehtavat_count' => count($this->tehtavat),
-                'aliluokat' => self::aliluokat(),
+                'luotupvm' => $row['luotu_pvm']
+                //'tehtavat' => $row['tehtavat'],//self::tehtavat(),
+                //'tehtavat_count' => count($row['tehtavat']),
+                //'aliluokat' => self::aliluokat(),
                 //'aliluokka_count' => count($this->aliluokat)
             ));
         }
@@ -63,9 +58,9 @@ class Luokka extends BaseModel {
     }
 
     //palauttaa uuden taulukon luokkia, joiden yliluokka on tarkasteltava luokka
-    public static function aliluokat() {
-        $kysely = DB::connection()->prepare('SELECT * FROM Luokka WHERE luokka_id = :id AND kayttaja_id = :kayttaja_id');
-        $kysely->execute(array('id' => $this->id, 'kayttaja_id'=>$_SESSION['user']));
+    public static function aliluokat($luokka_id) {
+        $kysely = DB::connection()->prepare('SELECT * FROM Luokka WHERE luokka_id = :luokka_id AND kayttaja_id = :kayttaja_id');
+        $kysely->execute(array('luokka_id' => $luokka_id, 'kayttaja_id'=>$_SESSION['user']));
         $rows = $kysely->fetchAll();
         $aliluokat = array();
 
@@ -78,17 +73,18 @@ class Luokka extends BaseModel {
                 'kuvaus' => $row['kuvaus'],
                 'yliluokka' => $row['luokka_id'],
                 'luotupvm' => $row['luotu_pvm'],
-                'tehtavat' => self::tehtavat(),
-                'aliluokat' => self::aliluokat(),
+                'luokka_id' => $row['luokka_id']
+                //'tehtavat' => self::tehtavat(),
+                //'aliluokat' => self::aliluokat($id),
                 //'aliluokka_count' => count(Luokka::aliluokat($row['id']))
             ));
             return $aliluokat;
         }
     }
 
-    public static function tehtavat() {
+    public static function tehtavat($id) {
         $kysely = DB::connection()->prepare('SELECT * FROM Tehtava WHERE luokka_id = :id AND kayttaja_id = :kayttaja_id');
-        $kysely->execute(array('id' => $this->id, 'kayttaja_id'=>$_SESSION['user'])); 
+        $kysely->execute(array('id' => $id, 'kayttaja_id'=>$_SESSION['user'])); 
         $rows = $kysely->fetchAll(); 
         $tehtavat = array();
         
@@ -149,16 +145,8 @@ class Luokka extends BaseModel {
     }
 
     public function update() {
-        $query = DB::connection()->prepare('UPDATE Luokka SET nimi = :nimi, kuvaus = :kuvaus, luokka_id = :luokka_id WHERE id = :id LIMIT 1');
+        $query = DB::connection()->prepare('UPDATE Luokka SET nimi = :nimi, kuvaus = :kuvaus, luokka_id = :luokka_id WHERE id = :id');
         $query->execute(array('id'=> $this->id, 'nimi'=> $this->nimi, 'kuvaus'=>$this->kuvaus, 'luokka_id'=>$this->yliluokka));        
     }
-    
-       public static function getId(){
-        return $this->id;
-    }
-    
-    public static function getNimi(){
-        return $this->nimi;
-    }
-    
+        
 }

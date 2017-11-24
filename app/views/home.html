@@ -22,14 +22,24 @@
 </div>
 
 <div>
+    
     {% if error %}
-
     <div class="alert alert-danger">
         {{error}}
-    </div>
-    
+    </div>   
     {% endif %}   
 
+    {% if message_in %}
+    <div class="alert alert-warning">
+        {{message_in}}
+    </div>
+    {% endif %}
+    
+    {% if message_out %}
+    <div class="alert alert-success">
+        {{message_out}}
+    </div>
+    {% endif %}
 
     <h1>Kirjaudu sisään</h1>
 

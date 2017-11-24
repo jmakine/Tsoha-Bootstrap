@@ -15,11 +15,6 @@ $routes->post('/out', function(){
 KayttajaController::logout();
 });
 
-//tästä luo tunnukset sivu...ei vielä tehty
-$routes->get('/login', function() {
-    HelloWorldController::login();
-});
-
 //debugging
 $routes->get('/hiekkalaatikko', function() {
     HelloWorldController::sandbox();

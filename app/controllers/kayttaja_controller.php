@@ -11,13 +11,13 @@ class KayttajaController extends BaseController {
     }else{
         //session_start() on kutsuttu valmiiksi index.php:ssä
       $_SESSION['user'] = $user->id;
-      Redirect::to('/tehtavat', array('tervehdys' => 'Hei ' ));//. $user->name . '! Mistähän aloittaisit tänään?'));
+      Redirect::to('/tehtavat', array('tervehdys' => 'Hei ' . $user->tunnus . '!'));
     }    
     }
     
     public static function logout(){
     $_SESSION['user'] = null;
-    Redirect::to('/', array('message' => 'Olet kirjautunut ulos!'));
+    Redirect::to('/', array('message_out' => 'Olet kirjautunut ulos!'));
   }
     
 }

@@ -6,6 +6,7 @@ class User extends BaseModel {
     
     public function __construct($attributes = null) {
         parent::__construct($attributes);
+        $this->validators = array();
     }
     
     public static function find($id){

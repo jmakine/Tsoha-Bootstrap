@@ -6,6 +6,7 @@ class LuokkaController extends BaseController {
         self::check_logged_in();
         // Haetaan kaikki luokat tietokannasta. Välitetään $luokat muuttuja, tämä on käytössä luokat.html:ssä
         $luokat = Luokka::kaikki();
+       
         // Renderöidään views/luokka kansiossa sijaitseva tiedosto luokat.html muuttujan $luokat datalla
         View::make('luokka/luokat.html', array('luokat' => $luokat));
     }
@@ -16,13 +17,12 @@ class LuokkaController extends BaseController {
         self::check_logged_in();
         $luokka = Luokka::find($id);
 
-        $aliluokat = $luokka->aliluokat(); //palauttaa listan aliluokista
+        $aliluokat = Luokka::aliluokat($id); //palauttaa listan luokan aliluokista
         //$kaikkitehtavat = array();
 
         //$aliluokan_tehtavat = $aliluokat->tehtavat();      
 
-        $luokka_id = $luokka->yliluokka;
-        $yliluokka = Luokka::find($luokka_id);
+        $yliluokka = Luokka::find($luokka->yliluokka);
         View::make('luokka/luokka1.html', array('tehtava' => $luokka->tehtavat, 'yliluokka' => $yliluokka, 'luokka' => $luokka, 'aliluokat' => $aliluokat));//, 'aliluokantehtavat' => $aliluokan_tehtavat));
     }
 
@@ -37,7 +37,8 @@ class LuokkaController extends BaseController {
         self::check_logged_in();
         $luokka = Luokka::find($id);
         $luokat = Luokka::kaikki();
-        View::make('luokka/luokanmuokkaus.html', array('attributes' => $luokka, 'luokat' => $luokat));
+        $yliluokka = Luokka::find($luokka->yliluokka);
+        View::make('luokka/luokanmuokkaus.html', array('yliluokka'=>$yliluokka, 'attributes' => $luokka, 'luokat' => $luokat));
     }
 
     public static function uusiluokka() {
@@ -73,11 +74,12 @@ class LuokkaController extends BaseController {
     public static function update($id) {
         self::check_logged_in();
         $params = $_POST;
+        $yliluokka = $params['yliluokka'];
         $attributes = array(
             'id' => $id,
             'nimi' => $params['nimi'],
-            'luokka_id' => $params['yliluokkaa'],
-            'kuvaus' => $params['kuvaus'],
+            'luokka_id' => $params['yliluokka'],
+            'kuvaus' => $params['kuvaus']
         );
         $luokka = new Luokka($attributes);
         $errors = $luokka->errors();
