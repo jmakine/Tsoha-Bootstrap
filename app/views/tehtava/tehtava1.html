@@ -13,7 +13,7 @@
   <!-- Painikkeet tähän -->
   <div>
       
-    <a href="{{base_path}}/tehtavat/{{tehtava.id}}/muokkaa" class="btn btn-default">Muokkaa</a> 
+    <a href="{{base_path}}/tehtavat/{{tehtava.id}}/muokkaa" class="btn btn-default" style="display: inline-block;">Muokkaa</a> 
     
                 <form method="post" action="{{base_path}}/tehtavat/{{tehtava.id}}/poista" style="display: inline-block;">
                 <button type="submit" class="btn btn-danger">Poista</button>
@@ -21,11 +21,15 @@
             
   </div>
   
-  <!-- Tiedot tulee listana tähän -->
-  <ul>
+<br>
+<ul>     
     <li><strong>Määräpäivä: </strong>   {{tehtava.deadline}}</li>
-    <li><strong>Luokka: </strong>   {{luokka.nimi}}</li>
-    <li><strong>Tärkeys: </strong> <label class="label label-danger">   {{tehtava.tarkeys}}</label></li>
+    <li><strong>Luokka: </strong><a style="font-size: 14" href="{{base_path}}/luokat/{{luokka.id}}">   {{luokka.nimi}}</a></li>
+    <li><strong>Tärkeys: </strong> {% if tehtava.tarkeys == 'korkea' %}<a style="background-color: red; color: white; font-weight: bold; display: inline-block">{{tehtava.tarkeys}}</a>
+                {% elseif tehtava.tarkeys == 'matala' %}<a style="background-color: green; color: white; font-weight: bold; display: inline-block">{{tehtava.tarkeys}}</a>
+                {% elseif tehtava.tarkeys == 'neutraali' %}<a style="background-color: yellow; color: white; font-weight: bold; display: inline-block">{{tehtava.tarkeys}}</a>
+                {% else %}<label>{{tehtava.tarkeys}}</label>
+                {% endif %}</li>
     <li><strong>Lisätty: </strong>   {{tehtava.luotupvm}}</li>
   </ul>
   

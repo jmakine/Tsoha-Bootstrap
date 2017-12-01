@@ -48,17 +48,21 @@
     </thead>
 
     <tbody>
-        <!-- Listataan pelit tähän -->
-        {% for tehtava in tehtavat %}
+        
+        {% for tehtava in tehtavalista %}
         <tr>
-            <td><a href="{{base_path}}/tehtavat/{{tehtava.id}}">{{tehtava.nimi}}</a></td>           
-            <td><label class="label label-danger">{{tehtava.tarkeys}}</label></td>
+            <td><a href="{{base_path}}/tehtavat/{{tehtava.tehtava_id}}">{{tehtava.tehtava_nimi}}</a></td>           
+            <td>{% if tehtava.tarkeys == 'korkea' %}<a style="background-color: red; color: white; font-weight: bold; display: inline-block">{{tehtava.tarkeys}}</a>
+                {% elseif tehtava.tarkeys == 'matala' %}<a style="background-color: green; color: white; font-weight: bold; display: inline-block">{{tehtava.tarkeys}}</a>
+                {% elseif tehtava.tarkeys == 'neutraali' %}<a style="background-color: yellow; color: white; font-weight: bold; display: inline-block">{{tehtava.tarkeys}}</a>
+                {% else %}<label>{{tehtava.tarkeys}}</label></td>
+                {% endif %}
             <td>{{tehtava.deadline}}</td>         
             <td>{{tehtava.luotupvm}}</td>
-            <td><a href="{{base_path}}/luokat/{{tehtava.luokka}}">{{tehtava.luokka.nimi}}</a> </td> <!--tällä tulee luokan id, miten saa nimen-->
-            <th><a class="btn btn-default btn-sm" href="{{base_path}}/tehtavat/{{tehtava.id}}/muokkaa">Muokkaa</a></th>
+            <td><a href="{{base_path}}/luokat/{{tehtava.luokka_id}}">{{tehtava.luokka_nimi}}</a></td> <!-- miten saa nimen-->
+            <th><a class="btn btn-default btn-sm" href="{{base_path}}/tehtavat/{{tehtava.tehtava_id}}/muokkaa">Muokkaa</a></th>
             <th>
-                <form method="post" action="{{base_path}}/tehtavat/{{tehtava.id}}/poista" style="display: inline-block;">
+                <form method="post" action="{{base_path}}/tehtavat/{{tehtava.tehtava_id}}/poista" style="display: inline-block;">
                 <button type="submit" class="btn btn-danger">Poista</button>
                 </form>
             </th>

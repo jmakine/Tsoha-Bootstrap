@@ -6,8 +6,7 @@ class Luokka extends BaseModel {
 
     public function __construct($attributes) {
         parent::__construct($attributes);
-        $this->validators = array('validate_nimi', 'validate_kuvaus');
-        
+        $this->validators = array('validate_nimi', 'validate_kuvaus');       
     }
 
     public function validate_nimi() {
@@ -40,18 +39,17 @@ class Luokka extends BaseModel {
         $luokat = array();
 
         foreach ($rows as $row) {
-            //$tehtavat = $this->tehtavat();
-            //$aliluokat = Luokka::aliluokat($row['id']);
+            
             $luokat[] = new Luokka(array(
                 'id' => $row['id'],
                 'nimi' => $row['nimi'],
                 'kuvaus' => $row['kuvaus'],
                 'yliluokka' => $row['luokka_id'],
-                'luotupvm' => $row['luotu_pvm']
-                //'tehtavat' => $row['tehtavat'],//self::tehtavat(),
-                //'tehtavat_count' => count($row['tehtavat']),
-                //'aliluokat' => self::aliluokat(),
-                //'aliluokka_count' => count($this->aliluokat)
+                'luotupvm' => $row['luotu_pvm'],
+                //'tehtavat' => Luokka::tehtavat($row['id']),
+                //'tehtavat_count' => count(Luokka::tehtavat($row['id'])),
+                //'aliluokat' => Luokka::aliluokat($row['id'])
+                //'aliluokka_count' => count(Luokka::aliluokat($row['id']))
             ));
         }
         return $luokat;
@@ -65,21 +63,21 @@ class Luokka extends BaseModel {
         $aliluokat = array();
 
         foreach ($rows as $row) {
-            //$tehtavat = Luokka::tehtavat($row['id']);
-            //$aliluokan_aliluokat = Luokka::aliluokat($row['id']);
+            
             $aliluokat[] = new Luokka(array(
                 'id' => $row['id'],
                 'nimi' => $row['nimi'],
                 'kuvaus' => $row['kuvaus'],
                 'yliluokka' => $row['luokka_id'],
-                'luotupvm' => $row['luotu_pvm'],
-                'luokka_id' => $row['luokka_id']
-                //'tehtavat' => self::tehtavat(),
-                //'aliluokat' => self::aliluokat($id),
+                'luotupvm' => $row['luotu_pvm']
+                //'tehtavat' => Luokka::tehtavat($row['id']),
+                //'tehtavat_count' => count(Luokka::tehtavat($row['id'])),
+                //'aliluokat' => Luokka::aliluokat($row['id'])
                 //'aliluokka_count' => count(Luokka::aliluokat($row['id']))
             ));
-            return $aliluokat;
+
         }
+        return $aliluokat;
     }
 
     public static function tehtavat($id) {
@@ -105,22 +103,20 @@ class Luokka extends BaseModel {
     public static function find($id) {
         $kysely = DB::connection()->prepare('SELECT * FROM Luokka WHERE id = :id LIMIT 1');
         $kysely->execute(array('id' => $id));
-        $row = $kysely->fetch(); //palauttaa assosiaatiolistan vain kyselyn tuottamasta ensimmäisestä! rivistä
-
+        $row = $kysely->fetch(); 
+        
         if ($row) {
-            //$tehtavat = Luokka::tehtavat($row['id']);
-            //$aliluokat = Luokka::aliluokat($row['id']);
-        //    $luokka = new Luokka();
+            
             $luokka = new Luokka(array(
                 'id' => $row['id'],
                 'nimi' => $row['nimi'],
                 'kuvaus' => $row['kuvaus'],
                 'yliluokka' => $row['luokka_id'],
                 'luotupvm' => $row['luotu_pvm'],
-                //'tehtavat' =>  $tehtavat,
-                //'tehtavat_count' => count($tehtavat),
-                //'aliluokat' => $aliluokat,
-                //'aliluokka_count' => count($aliluokat)
+                //'tehtavat' = Luokka::tehtavat($row['id']);
+                'aliluokat' => Luokka::aliluokat($row['id'])
+                //'tehtavat_count' => count(Luokka::tehtavat($row['id'])),
+                //'aliluokka_count' => count(Luokka::aliluokat($row['id']))
             ));
 
             return $luokka;
@@ -129,10 +125,10 @@ class Luokka extends BaseModel {
     }
 
     public function save() {
-        $query = DB::connection()->prepare('INSERT INTO Luokka (kayttaja_id, nimi, kuvaus, luotu_pvm, luokka_id) VALUES (' . $_SESSION['user'] . ', :nimi, :kuvaus, NOW(), ' . $this->yliluokka . ') LIMIT 1 RETURNING id, luotu_pvm');
-        $query->bindValue('nimi', $this->nimi, PDO::PARAM_STR);
-        $query->bindValue('kuvaus', $this->kuvaus, PDO::PARAM_STR);
-        $query->execute();
+        $query = DB::connection()->prepare('INSERT INTO Luokka (kayttaja_id, nimi, kuvaus, luotu_pvm, luokka_id) VALUES (:kayttaja_id, :nimi, :kuvaus, NOW(), :luokka_id) RETURNING id, luotu_pvm');//. $_SESSION['user'] . ', :nimi, :kuvaus, NOW(), ' . $this->yliluokka . ') RETURNING id, luotu_pvm');
+        //$query->bindValue('nimi', $this->nimi, PDO::PARAM_STR);
+        //$query->bindValue('kuvaus', $this->kuvaus, PDO::PARAM_STR);
+        $query->execute(array('nimi'=>$this->nimi, 'kuvaus'=>$this->kuvaus, 'kayttaja_id'=>$_SESSION['user'], 'luokka_id' => $this->yliluokka));
         $row = $query->fetch();
         $this->id = $row['id'];
         $this->luotupvm = $row['luotu_pvm'];
@@ -149,4 +145,8 @@ class Luokka extends BaseModel {
         $query->execute(array('id'=> $this->id, 'nimi'=> $this->nimi, 'kuvaus'=>$this->kuvaus, 'luokka_id'=>$this->yliluokka));        
     }
         
+    public function getNimi(){
+        return $this->nimi;
+    }
+    
 }

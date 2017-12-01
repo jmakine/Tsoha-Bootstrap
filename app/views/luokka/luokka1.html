@@ -8,41 +8,41 @@
 {% endif %}
 
 <h1>Luokka: {{luokka.nimi}}</h1>
+<br>
 
-<!-- Painikkeet tähän -->
 <div>
-    
     <a href="{{base_path}}/luokat/{{luokka.id}}/muokkaa" class="btn btn-default">Muokkaa</a>
-                <form method="post" action="{{base_path}}/luokat/{{luokka.id}}/poista" style="display: inline-block;">
-                <button type="submit" class="btn btn-danger">Poista</button>
+    <form method="post" action="{{base_path}}/luokat/{{luokka.id}}/poista" style="display: inline-block;">
+        <button type="submit" class="btn btn-danger">Poista</button>
     </form>
 </div>
 
-<!-- Tiedot tulee listana tähän -->
-<ul>
-    <li><strong>Luotu: </strong>{{luokka.luotupvm}}</li>
-    <li><strong>Kuuluu luokkaan: </strong><a href="{{base_path}}/luokat/{{yliluokka.id}}">{{yliluokka.nimi}}</a></li>
-    <li><strong>Luokan tehtävät: ({{luokka.tehtavia_count}} kpl)</strong></li>
-            <ul>
-                {% for tehtava in tehtavat %}
-                <a href="{{base_path}}/tehtavat/{{tehtava.id}}"><li>{{tehtava.nimi}}</li></a>
-                {% endfor %}
-            </ul>
-</ul>
-<!-- Kuvaus tulee tähän -->
 <div>
-<p> <strong>Kuvaus:</strong></p>
-<p>{{luokka.kuvaus}}</p>
+    <ul>  
+        <br>
+        <li><strong>Kuuluu luokkaan: </strong><a href="{{base_path}}/luokat/{{yliluokka.id}}">{{yliluokka.nimi}}</a></li>
+        <li><strong>Luotu: </strong>{{luokka.luotupvm}}</li>
+        <!--<li><strong>Luokan tehtävät: ({{luokka.tehtavia_count}} kpl)</strong></li>
+                <ul>
+                    {% for tehtava in tehtavat %}
+                    <li><a href="{{base_path}}/tehtavat/{{tehtava.id}}">{{tehtava.nimi}}</a></li>
+                    {% endfor %}
+                </ul>-->
+    </ul>
 </div>
 
-<!--tähän lista luokan aliluokista-->
+<div>
+    <p> <strong>Kuvaus:</strong></p>
+    <p>{{luokka.kuvaus}}</p>
+</div>
+
 <div>
     <p><strong>Sisältää luokat:</strong></p>
-<ul>
-{% for aliluokka in aliluokat %}
-    <li><a href="{{base_path}}/luokat/{{aliluokka.id}}">{{aliluokka.nimi}}</a></li>
-{% endfor %}
-</ul>
+    <ul>
+        {% for aliluokka in aliluokat %}
+        <li><a href="{{base_path}}/luokat/{{aliluokka.id}}">{{aliluokka.nimi}}</a></li>
+        {% endfor %}
+    </ul>
 </div>
 
 {% endblock %}

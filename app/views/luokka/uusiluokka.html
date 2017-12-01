@@ -4,41 +4,44 @@
 -->
 
 {% if errors %}
-  <div class="alert alert-danger">
-      <ul>
-          {% for error in errors %}
-          <li>
-              {{error}}
-          </li>
-          {% endfor %}
-      </ul>        
-  </div>
-  {% endif %}
-  
-  <h1>Lisää uusi luokka</h1>
+<div class="alert alert-danger">
+    <ul>
+        {% for error in errors %}
+        <li>
+            {{error}}
+        </li>
+        {% endfor %}
+    </ul>        
+</div>
+{% endif %}
 
-  
-  <form method="post" action="{{base_path}}/luokat">
+<h1>Lisää uusi luokka</h1>
+
+
+<form method="post" action="{{base_path}}/luokat">
     <div class="form-group">
-      <label>Nimi</label>
-      <input type="text" class="form-control" name="nimi" value="{{attributes.nimi}}">
+        <label>Nimi</label>
+        <input type="text" class="form-control" name="nimi" value="{{attributes.nimi}}">
     </div>  
-                <div class="form-group">
-                    <label class="control-label">Yliluokka</label>
-                    <select name="yliluokka" class="form-control" value="{{attributes.yliluokka}}">
-                        {% for luokka in luokat %}
-                            <option value="{{luokka.id}}">{{luokka.id}}</option>
-                        {% endfor %}
-                    </select>
-                </div>
-      
     <div class="form-group">
-      <label>Kuvaus</label>
-      <input type="text" name="kuvaus" class="form-control" value="{{attributes.kuvaus}}">
+        <label class="control-label">Yliluokka</label>
+        <select name="yliluokka" class="form-control">
+            <<option selected value=""></option>  
+            {% for luokka in luokat %} 
+            {% if luokka != yliluokka and luokka != attributes %}
+            <option value="{{luokka.id}}">{{luokka.nimi}}</option>           
+            {% endif %}
+            {% endfor %}
+        </select>
     </div>
-      
+
     <div class="form-group">
-      <button type="submit" class="btn btn-primary"> Lisää</button>
+        <label>Kuvaus</label>
+        <input type="text" name="kuvaus" class="form-control" value="{{attributes.kuvaus}}">
     </div>
-  </form>
+
+    <div class="form-group">
+        <button type="submit" class="btn btn-primary"> Lisää</button>
+    </div>
+</form>
 {% endblock %}

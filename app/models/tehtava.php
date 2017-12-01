@@ -2,7 +2,7 @@
 
 class Tehtava extends BaseModel {
  
-    public $id, $nimi, $deadline, $luotupvm, $kuvaus, $luokka, $tarkeys;  //luokka on luokka_id, INT
+    public $id, $nimi, $deadline, $luotupvm, $kuvaus, $luokka, $tarkeys;  
 
     public function __construct($attributes) {
         parent::__construct($attributes);
@@ -11,12 +11,13 @@ class Tehtava extends BaseModel {
 
     public function validate_nimi() {
         $errors = array();
+        
         if ($this->nimi == '' || $this->nimi == null) {
             $errors[] = 'Nimi ei saa olla tyhjä!';
         }
         if (strlen($this->nimi) < 6 || strlen($this->nimi > 30)) {
             $errors[] = 'Nimen pituuden tulee olla vähintään kuusi merkkiä ja enintään 30!';
-        }
+        }        
         return $errors;
     }
     
@@ -25,8 +26,7 @@ class Tehtava extends BaseModel {
         if (strlen($this->kuvaus) > 400) {
             $errors[] = 'Max. pituus tehtavan kuvaukselle 400 merkkiä!';
         }
-
-        return $errors;
+       return $errors;
     }
 
     //j.n.YY = 1.1.2018, dd.mm.YY = 01.01.2018 
@@ -68,6 +68,36 @@ class Tehtava extends BaseModel {
         }
         return $tehtavat;
     }
+    
+    //hakee luokka-olion tehtävän id:llä
+    public static function luokka($id){
+        
+        $kysely = DB::connection()->prepare(''
+                . 'SELECT Luokka.id, Luokka.nimi, Luokka.kuvaus, Luokka.luokka_id, Luokka.luotu_pvm, Tehtava.id, Tehtava.luokka_id FROM Tehtava '
+                . 'INNER JOIN Luokka '
+                . 'ON Luokka.id = Tehtava.luokka_id '
+                . 'WHERE Tehtava.id = :id LIMIT 1');
+        $kysely->execute(array('id' => $id));
+        $row = $kysely->fetch(); 
+        
+        if ($row) {
+            
+            $luokka = new Luokka(array(
+                'id' => $row['id'],
+                'nimi' => $row['nimi'],
+                'kuvaus' => $row['kuvaus'],
+                'yliluokka' => $row['luokka_id'],
+                'luotupvm' => $row['luotu_pvm'],
+                //'tehtavat' = Luokka::tehtavat($row['id']);
+                'aliluokat' => Luokka::aliluokat($row['id'])
+                //'tehtavat_count' => count(Luokka::tehtavat($row['id'])),
+                //'aliluokka_count' => count(Luokka::aliluokat($row['id']))
+            ));
+
+            return $luokka;
+        }
+        return null;
+    }
 
     public static function find($id) {
         $kysely = DB::connection()->prepare('SELECT * FROM Tehtava WHERE id = :id LIMIT 1');
@@ -90,15 +120,10 @@ class Tehtava extends BaseModel {
         return null;
     }
 
-    public function save() {
-        // Lisätään RETURNING id tietokantakyselymme loppuun, niin saamme lisätyn rivin id-sarakkeen arvon 
-        // luotu_pvm ei päivitetä
-        $query = DB::connection()->prepare('INSERT INTO Tehtava (kayttaja_id, nimi, deadline, tarkeys, luotu_pvm, kuvaus, luokka_id) VALUES ('. $_SESSION['user'] .', :nimi, :deadline, :tarkeys, NOW(), :kuvaus, :luokka_id) RETURNING id, luotu_pvm');
-        // Muistathan, että olion attribuuttiin pääse syntaksilla $this->attribuutin_nimi
-        $query->execute(array('nimi' => $this->nimi, 'deadline' => $this->deadline, 'tarkeys' => $this->tarkeys, 'kuvaus' => $this->kuvaus, 'luokka_id' => $this->luokka));
-        // Haetaan kyselyn tuottama rivi, joka sisältää lisätyn rivin id-sarakkeen arvon
+    public function save() {   
+        $query = DB::connection()->prepare('INSERT INTO Tehtava (kayttaja_id, nimi, deadline, tarkeys, luotu_pvm, kuvaus, luokka_id) VALUES (:kayttaja_id, :nimi, :deadline, :tarkeys, NOW(), :kuvaus, :luokka_id) RETURNING id, luotu_pvm');
+        $query->execute(array('kayttaja_id' => $_SESSION['user'], 'nimi' => $this->nimi, 'deadline' => $this->deadline, 'tarkeys' => $this->tarkeys, 'kuvaus' => $this->kuvaus, 'luokka_id' => $this->luokka));
         $row = $query->fetch();
-        // Asetetaan lisätyn rivin id-sarakkeen arvo ja lisäyshetki olioomme 
         $this->id = $row['id'];
         $this->luotupvm = $row['luotu_pvm'];
     }
@@ -114,6 +139,5 @@ class Tehtava extends BaseModel {
         
     }
     
-    //public static 
     
 }

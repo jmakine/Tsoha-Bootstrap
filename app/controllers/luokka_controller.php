@@ -4,33 +4,22 @@ class LuokkaController extends BaseController {
 
     public static function luokat() {
         self::check_logged_in();
-        // Haetaan kaikki luokat tietokannasta. Välitetään $luokat muuttuja, tämä on käytössä luokat.html:ssä
         $luokat = Luokka::kaikki();
-       
-        // Renderöidään views/luokka kansiossa sijaitseva tiedosto luokat.html muuttujan $luokat datalla
         View::make('luokka/luokat.html', array('luokat' => $luokat));
     }
-
-//nyt näkymässä luokat.html on käytössä luokat -niminen taulukko tietokantani luokista
 
     public static function yksiluokka($id) {
         self::check_logged_in();
         $luokka = Luokka::find($id);
 
-        $aliluokat = Luokka::aliluokat($id); //palauttaa listan luokan aliluokista
-        //$kaikkitehtavat = array();
-
-        //$aliluokan_tehtavat = $aliluokat->tehtavat();      
-
+        $aliluokat = Luokka::aliluokat($id); //palauttaa listan luokan aliluokista (luokka-olioita)
+        
+        $yliluokka = null;
+        if($luokka->yliluokka != NULL){
         $yliluokka = Luokka::find($luokka->yliluokka);
-        View::make('luokka/luokka1.html', array('tehtava' => $luokka->tehtavat, 'yliluokka' => $yliluokka, 'luokka' => $luokka, 'aliluokat' => $aliluokat));//, 'aliluokantehtavat' => $aliluokan_tehtavat));
-    }
-
-    //
-    public static function aliluokat($id) {
-        self::check_logged_in();
-        $aliluokat = Luokka::aliluokat($id);
-        View::make('luokka/luokat.html', array('luokat' => $aliluokat));
+        } //yliluokka on id
+        
+        View::make('luokka/luokka1.html', array('tehtava' => $luokka->tehtavat, 'yliluokka' => $yliluokka, 'luokka' => $luokka, 'aliluokat' => $aliluokat));
     }
 
     public static function muokkaaluokka($id) {
@@ -49,25 +38,33 @@ class LuokkaController extends BaseController {
 
     public static function talleta() {
         self::check_logged_in();
-        // POST-pyynnön muuttujat sijaitsevat $_POST nimisessä assosiaatiolistassa
-        // esim lomakkeen 'nimi' kentän sisältö on $_POST['nimi'] 
         $params = $_POST;
-        // Alustetaan uusi Luokka-luokan olion käyttäjän syöttämillä arvoilla
+        $yliluokka = $params['yliluokka'];
+        $nimi_on = array();
+        
+        if($params['yliluokka'] == ''){
+            $yliluokka = NULL;
+        }
+        
         $attributes = array(
             'nimi' => $params['nimi'],
             'kuvaus' => $params['kuvaus'],
-            'yliluokka' => $params['yliluokka']
+            'yliluokka' => $yliluokka
         );
-
-        $luokka = new Luokka($attributes);
-        $errors = $luokka->errors();
-
-        if (count($errors == 0)) {
-            $luokka->save();
-            //ohjataan käyttäjä luokan esittelysivulle tämän jälkeen ja kerrotaan että tallennus onnistui:
-            Redirect::to('/luokat/' . $luokka->id, array('message' => 'Luokka lisätty!'));
+        
+        if(in_array($params['nimi'], array_column(Luokka::kaikki(), 'nimi'))){
+            $nimi_on[] = 'Tämän niminen luokka on jo olemassa! Keksippä joku muu.';  
+        }
+        
+        $luokka = new Luokka($attributes);        
+       $error = $luokka->errors();
+       $errors = array_merge($error, $nimi_on);
+                
+        if (count($errors > 0)) {
+                        View::make('/luokka/uusiluokka.html', array('errors' => $errors, 'attributes' => $attributes));
         } else {
-            View::make('/luokka/uusiluokka.html', array('errors' => $errors, 'attributes' => $attributes));
+            $luokka->save();
+            Redirect::to('/luokat/' . $luokka->id, array('message' => 'Luokka lisätty!'));
         }
     }
 
@@ -75,19 +72,24 @@ class LuokkaController extends BaseController {
         self::check_logged_in();
         $params = $_POST;
         $yliluokka = $params['yliluokka'];
+        
+        if ($params['yliluokka'] == ''){
+            $yliluokka = NULL;
+        }
+       
         $attributes = array(
             'id' => $id,
             'nimi' => $params['nimi'],
-            'luokka_id' => $params['yliluokka'],
+            'yliluokka' => $yliluokka,
             'kuvaus' => $params['kuvaus']
         );
+        
         $luokka = new Luokka($attributes);
         $errors = $luokka->errors();
-
+        
         if (count($errors) > 0) {
             View::make('luokka/luokanmuokkaus.html', array('errors' => $errors, 'attributes' => $attributes));
         } else {
-            // Kutsutaan alustetun olion update-metodia, joka päivittää luokan tiedot tietokannassa
             $luokka->update();
             Redirect::to('/luokat/' . $luokka->id, array('message' => 'Luokkaa muokattu!'));
         }

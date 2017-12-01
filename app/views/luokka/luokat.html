@@ -20,10 +20,10 @@
     <thead>
         <tr>
             <th>Nimi</th>
-            <th>Aliluokkia</th>
-            <th>Tehtäviä</th>
+            <!--<th>Aliluokkia</th>
+            <th>Tehtäviä</th>-->         
+            <!--<th>Kuuluu luokkaan</th>-->
             <th>Luotu</th>
-            <th>Kuuluu luokkaan</th>
             <th></th>
             <th></th>
         </tr>
@@ -33,12 +33,14 @@
         {% for luokka in luokat %} 
         <tr>
             <td><a href="{{base_path}}/luokat/{{luokka.id}}">{{luokka.nimi}}</a></td> 
-            <!--kun tästä, (aliluokkien lkmäärästä) klikkaa, aukeaa lista aliluokista:-->
+            <!--
             <td>{{luokka.aliluokka_count}}</a></td> 
-            <td>{{luokka.tehtavat_count}}</a></td> 
+            <td>{{luokka.tehtavat_count}}</a></td> -->
+            
+            <!-- jätetään tämä nyt pois, pitäisi tehdä rekursiivisella joinilla controllerin puolella, esim. 
+            <td><a href="{{base_path}}/luokat/{{luokka.yliluokka}}">{{luokka.yliluokka}}</a></td> -->
             <td>{{luokka.luotupvm}}</td>
-            <td><a href="{{base_path}}/luokat/{{luokka.yliluokka}}"></a>{{luokka.yliluokka}}</td> <!--miten pitäisi toimia?-->
-            <th><a class="btn btn-default btn-sm" href="{{base_path}}/luokat/{{luokka.id}}/muokkaa">Muokkaa luokkaa</a></th>
+            <th><a class="btn btn-default btn-sm" href="{{base_path}}/luokat/{{luokka.id}}/muokkaa" style="display: inline-block;">Muokkaa</a></th>
             <th>
                 <form method="post" action="{{base_path}}/luokat/{{luokka.id}}/poista" style="display: inline-block;">
                 <button type="submit" class="btn btn-danger">Poista</button>
