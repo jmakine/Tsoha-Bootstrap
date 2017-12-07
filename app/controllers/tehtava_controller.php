@@ -4,21 +4,30 @@ class TehtavaController extends BaseController {
 
     public static function tehtavat() {
         self::check_logged_in();
-        $tehtavat = Tehtava::kaikki();
+        //$user_logged_in = self::get_user_logged_in(); 
+        //$options = array('kayttaja_id' => $user_logged_in->id);
+        $options = array();
+
+        $params = $_GET;
+        if (isset($params['tarkeys'])) {
+            $options['tarkeys'] = $params['tarkeys'];
+        }
+        $tehtavat = Tehtava::kaikki($options);
+
         $luokat = array();
         $tehtavalista = array();
+
         foreach ($tehtavat as $tehtava) {
-            
-            $luokka = Tehtava::luokka($tehtava->id);
-            if ($luokka != NULL){
+            $luokka = Luokka::find($tehtava->luokka);
+            if ($luokka != NULL) {
                 $luokka_id = $luokka->id;
-            $luokka_nimi = $luokka->nimi;
+                $luokka_nimi = $luokka->nimi;
             } else {
                 $luokka_id = NULL;
                 $luokka_nimi = NULL;
             }
-            
-            
+
+            //kasataan uusi lista, jossa sekä tehtävän nimi ja id, että tehtävän luokan nimi ja id
             $tehtavalista[] = array(
                 'tehtava_nimi' => $tehtava->nimi,
                 'tehtava_id' => $tehtava->id,
@@ -30,6 +39,7 @@ class TehtavaController extends BaseController {
                 'luotupvm' => $tehtava->luotupvm
             );
         }
+
         View::make('tehtava/tehtavat.html', array('tehtavat' => $tehtavat, 'luokat' => $luokat, 'tehtavalista' => $tehtavalista));
     }
 
@@ -71,9 +81,10 @@ class TehtavaController extends BaseController {
         $tehtava = new Tehtava($attributes);
         $errors = $tehtava->errors();
 
-        //jos nimeä muutettu, katsotaan ettei ole jo olemassa:        
+        //jos nimeä muutettu, katsotaan ettei ole jo olemassa:   
+        //$options = null;
         if (Tehtava::find($id)->nimi != $params['nimi']) {
-            $kaikki = Tehtava::kaikki();
+            $kaikki = Tehtava::kaikki(null);
             $kaikki_nimet = array();
             foreach ($kaikki as $yksi) {
                 $kaikki_nimet[] = $yksi->nimi;
@@ -101,12 +112,18 @@ class TehtavaController extends BaseController {
         self::check_logged_in();
         $params = $_POST;
 
-
         if ($params['luokka'] == '') {
             $params['luokka'] = NULL;
         }
         if ($params['deadline'] == '') {
             $params['deadline'] = NULL;
+        }
+
+        //katsotaan, löytyykö talletettavan tehtävän nimistä tehtävää jo kannasta
+        $nimi_on = array();
+        $kaikki = Tehtava::kaikki(null);
+        if (in_array($params['nimi'], array_column($kaikki, 'nimi'))) {
+            $nimi_on[] = 'Tämän niminen tehtava on jo olemassa! Keksippä joku muu.';
         }
 
         $attributes = array(
@@ -116,15 +133,18 @@ class TehtavaController extends BaseController {
             'deadline' => $params['deadline'],
             'tarkeys' => $params['tarkeys'],
         );
+
         $tehtava = new Tehtava($attributes);
-        $errors = $tehtava->errors();
+        $errors1 = $tehtava->errors();
+
+        $errors = array_merge($errors1, $nimi_on);
 
         if (count($errors == 0)) {
-            $tehtava->save();
-            Redirect::to('/tehtavat/' . $tehtava->id, array('message' => 'Tehtävä lisätty!'));
-            //reiteissä get->tehtavat/:id näyttää näkymän tehtava1.html
-        } else {
-            View::make('/tehtavat/uusitehtava.html', array('errors' => $errors, 'attributes' => $attributes));
+                        $tehtava->save(); //-> saadaan id ja luotu_pvm
+            Redirect::to('/tehtavat/' .$tehtava->id, array('message' => 'Tehtävä lisätty!'));
+        }else{
+            View::make('/tehtava/uusitehtava.html', array('errors' => $errors, 'attributes' => $attributes));
+        
         }
     }
 

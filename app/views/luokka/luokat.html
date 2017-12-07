@@ -22,7 +22,7 @@
             <th>Nimi</th>
             <!--<th>Aliluokkia</th>
             <th>Tehtäviä</th>-->         
-            <!--<th>Kuuluu luokkaan</th>-->
+            <th>Kuuluu luokkaan</th>
             <th>Luotu</th>
             <th></th>
             <th></th>
@@ -30,15 +30,15 @@
     </thead>
 
     <tbody>
-        {% for luokka in luokat %} 
+        {% for luokka in luokkalista %} 
         <tr>
             <td><a href="{{base_path}}/luokat/{{luokka.id}}">{{luokka.nimi}}</a></td> 
             <!--
             <td>{{luokka.aliluokka_count}}</a></td> 
             <td>{{luokka.tehtavat_count}}</a></td> -->
             
-            <!-- jätetään tämä nyt pois, pitäisi tehdä rekursiivisella joinilla controllerin puolella, esim. 
-            <td><a href="{{base_path}}/luokat/{{luokka.yliluokka}}">{{luokka.yliluokka}}</a></td> -->
+            
+            <td><a href="{{base_path}}/luokat/{{luokka.yliluokka_id}}">{{luokka.yliluokka_nimi}}</a></td> 
             <td>{{luokka.luotupvm}}</td>
             <th><a class="btn btn-default btn-sm" href="{{base_path}}/luokat/{{luokka.id}}/muokkaa" style="display: inline-block;">Muokkaa</a></th>
             <th>

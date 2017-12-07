@@ -9,6 +9,7 @@ class HelloWorldController extends BaseController {
     }
 
     public static function sandbox() {
+        
         $user = $_SESSION['user'];
         Kint::dump($user);
         
@@ -39,8 +40,8 @@ class HelloWorldController extends BaseController {
         $tehtava = Tehtava::find(14);
         //$luokat = Luokka::kaikki();
         $luokka = Luokka::find($tehtava->luokka);
-        Kint::dump(Luokka::aliluokat(13));
-        Kint::dump($luokka->id);
+        //Kint::dump(Luokka::aliluokat(13));
+        //Kint::dump($luokka->id);
         
         /*$nimet=array_column(Luokka::kaikki(), 'nimi');
         Kint::dump($nimet);

@@ -27,11 +27,13 @@
         <select name="yliluokka" class="form-control"> 
             <option selected value="{{yliluokka.id}}">{{yliluokka.nimi}}</option>    
             {% for luokka in luokat %} 
-            {% if luokka != yliluokka %}
+            {% if luokka.id != yliluokka.id and luokka.id != attributes.id %} <!-- and luokka.id not in luokka.aliluokat %} ei voi sisältyä aliluokkaansa ... -->
             <option value="{{luokka.id}}">{{luokka.nimi}}</option>           
             {% endif %}
             {% endfor %}
+            {% if yliluokka.id != null %}
             <option value=""></option>
+            {% endif %}
         </select>    
     </div>
         

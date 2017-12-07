@@ -15,7 +15,7 @@ class Luokka extends BaseModel {
             $errors[] = 'Nimi ei saa olla tyhjä!';
         }
         if (strlen($this->nimi) < 4 || strlen($this->nimi > 30)) {
-            $errors[] = 'Nimen pituuden tulee olla vähintään kuusi ja enintään 30 merkkiä!';
+            $errors[] = 'Nimen pituuden tulee olla vähintään neljä ja enintään 30 merkkiä!';
         }
         return $errors;
     }
@@ -53,6 +53,30 @@ class Luokka extends BaseModel {
             ));
         }
         return $luokat;
+    }
+    
+    public static function find($id) {
+        $kysely = DB::connection()->prepare('SELECT * FROM Luokka WHERE id = :id LIMIT 1');
+        $kysely->execute(array('id' => $id));
+        $row = $kysely->fetch(); 
+        
+        if ($row) {
+            
+            $luokka = new Luokka(array(
+                'id' => $row['id'],
+                'nimi' => $row['nimi'],
+                'kuvaus' => $row['kuvaus'],
+                'yliluokka' => $row['luokka_id'],
+                'luotupvm' => $row['luotu_pvm'],
+                //'tehtavat' = Luokka::tehtavat($row['id']);
+                'aliluokat' => Luokka::aliluokat($row['id'])
+                //'tehtavat_count' => count(Luokka::tehtavat($row['id'])),
+                //'aliluokka_count' => count(Luokka::aliluokat($row['id']))
+            ));
+
+            return $luokka;
+        }
+        return null;
     }
 
     //palauttaa uuden taulukon luokkia, joiden yliluokka on tarkasteltava luokka
@@ -100,34 +124,8 @@ class Luokka extends BaseModel {
         }
     }
 
-    public static function find($id) {
-        $kysely = DB::connection()->prepare('SELECT * FROM Luokka WHERE id = :id LIMIT 1');
-        $kysely->execute(array('id' => $id));
-        $row = $kysely->fetch(); 
-        
-        if ($row) {
-            
-            $luokka = new Luokka(array(
-                'id' => $row['id'],
-                'nimi' => $row['nimi'],
-                'kuvaus' => $row['kuvaus'],
-                'yliluokka' => $row['luokka_id'],
-                'luotupvm' => $row['luotu_pvm'],
-                //'tehtavat' = Luokka::tehtavat($row['id']);
-                'aliluokat' => Luokka::aliluokat($row['id'])
-                //'tehtavat_count' => count(Luokka::tehtavat($row['id'])),
-                //'aliluokka_count' => count(Luokka::aliluokat($row['id']))
-            ));
-
-            return $luokka;
-        }
-        return null;
-    }
-
     public function save() {
-        $query = DB::connection()->prepare('INSERT INTO Luokka (kayttaja_id, nimi, kuvaus, luotu_pvm, luokka_id) VALUES (:kayttaja_id, :nimi, :kuvaus, NOW(), :luokka_id) RETURNING id, luotu_pvm');//. $_SESSION['user'] . ', :nimi, :kuvaus, NOW(), ' . $this->yliluokka . ') RETURNING id, luotu_pvm');
-        //$query->bindValue('nimi', $this->nimi, PDO::PARAM_STR);
-        //$query->bindValue('kuvaus', $this->kuvaus, PDO::PARAM_STR);
+        $query = DB::connection()->prepare('INSERT INTO Luokka (kayttaja_id, nimi, kuvaus, luotu_pvm, luokka_id) VALUES (:kayttaja_id, :nimi, :kuvaus, NOW(), :luokka_id) RETURNING id, luotu_pvm');
         $query->execute(array('nimi'=>$this->nimi, 'kuvaus'=>$this->kuvaus, 'kayttaja_id'=>$_SESSION['user'], 'luokka_id' => $this->yliluokka));
         $row = $query->fetch();
         $this->id = $row['id'];

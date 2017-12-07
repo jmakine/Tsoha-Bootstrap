@@ -32,18 +32,29 @@
         <label>Tärkeys</label>
         <select name="tarkeys" class="form-control"> 
             <option selected value="{{attributes.tarkeys}}">{{attributes.tarkeys}}</option>
+            {% if attributes.tarkeys != '' %}
             <option value=""></option>
+            {% endif %}
+
+            {% if attributes.tarkeys != 'matala' %}
             <option value="matala">Matala</option>
+            {% endif %}
+
+            {% if attributes.tarkeys != 'korkea' %}
             <option value="korkea">Korkea</option>
-            <option value="neutraali">Neutraali</option>            
+            {% endif %}
+
+            {% if attributes.tarkeys != 'neutraal' %}
+            <option value="neutraali">Neutraali</option> 
+            {% endif %}
         </select>
     </div>
 
     <div class="form-group">
         <label>Kuvaus</label>
-        <textarea rows="6" maxlength="400" class="form-control" name="kuvaus" value="{{attributes.kuvaus}}">   
+        <textarea rows="8" maxlength="400" class="form-control" name="kuvaus" value="{{attributes.kuvaus}}">   
       {{attributes.kuvaus}}
-      </textarea>
+        </textarea>
     </div>
 
     <div class="form-group"> <!--ei toimi jos luokkaa ei muuta, yrittää update luokan nimen luokka.id:ksi -->
@@ -51,7 +62,7 @@
         <select name="luokka" class="form-control"> 
             <option selected value="{{luokka.id}}">{{luokka.nimi}}</option>   
             {% for luokka1 in luokat %} 
-            {% if luokka1 != luokka %}
+            {% if luokka1.id != luokka.id %}
             <option value="{{luokka1.id}}">{{luokka1.nimi}}</option>
             {% endif %}
             {% endfor %}

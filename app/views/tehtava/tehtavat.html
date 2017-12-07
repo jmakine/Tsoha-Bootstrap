@@ -19,20 +19,26 @@
 {% endif %}
 
 <h1>Tehtävälista</h1>
-
+<br>
 <p>
     <a href="{{base_path}}/tehtavat/lisaa" class="btn btn-success">Lisää tehtävä</a>
 </p>
 
-<!--
-<h4>Näytä vain:</h4>
-<p> <select name="Luokka" multiple="multiple">
-        <option value="high">Korkea</option>
-        <option value="medium">Keskitaso</option>
-        <option value="matala">Matala</option>
+
+<h4>Tärkeys:</h4>
+<div class="form-group">
+<form method="get" action="" class="form-inline">
+    <select class="form-control" name="tarkeys">            
+        <option value="korkea" style="color: red; font-weight: bold; display: inline-block">Korkea</option>
+        <option value="neutraali" style="color: orange; display: inline-block">Neutraali</option>
+        <option value="matala" style="color: green; font-weight: bold;">Matala</option>   
+        <option value="" style="color: grey">Ei tärkeyttä</option>
     </select>
-</p>
--->
+    <div class="btn-group"> <button type="submit" class="btn btn-default">Näytä</button> <a href="{{base_path}}/tehtavat" class="btn btn-default">Näytä kaikki</a> </div>
+</form>
+    
+    
+</div>
 
 <table id="myTable" class="table table-striped table-bordered">
     <thead>
@@ -48,22 +54,22 @@
     </thead>
 
     <tbody>
-        
+
         {% for tehtava in tehtavalista %}
         <tr>
             <td><a href="{{base_path}}/tehtavat/{{tehtava.tehtava_id}}">{{tehtava.tehtava_nimi}}</a></td>           
             <td>{% if tehtava.tarkeys == 'korkea' %}<a style="background-color: red; color: white; font-weight: bold; display: inline-block">{{tehtava.tarkeys}}</a>
                 {% elseif tehtava.tarkeys == 'matala' %}<a style="background-color: green; color: white; font-weight: bold; display: inline-block">{{tehtava.tarkeys}}</a>
-                {% elseif tehtava.tarkeys == 'neutraali' %}<a style="background-color: yellow; color: white; font-weight: bold; display: inline-block">{{tehtava.tarkeys}}</a>
+                {% elseif tehtava.tarkeys == 'neutraali' %}<a style="background-color: orange; color: white; font-weight: bold; display: inline-block">{{tehtava.tarkeys}}</a>
                 {% else %}<label>{{tehtava.tarkeys}}</label></td>
-                {% endif %}
+            {% endif %}
             <td>{{tehtava.deadline}}</td>         
             <td>{{tehtava.luotupvm}}</td>
-            <td><a href="{{base_path}}/luokat/{{tehtava.luokka_id}}">{{tehtava.luokka_nimi}}</a></td> <!-- miten saa nimen-->
+            <td><a href="{{base_path}}/luokat/{{tehtava.luokka_id}}">{{tehtava.luokka_nimi}}</a></td>
             <th><a class="btn btn-default btn-sm" href="{{base_path}}/tehtavat/{{tehtava.tehtava_id}}/muokkaa">Muokkaa</a></th>
             <th>
                 <form method="post" action="{{base_path}}/tehtavat/{{tehtava.tehtava_id}}/poista" style="display: inline-block;">
-                <button type="submit" class="btn btn-danger">Poista</button>
+                    <button type="submit" class="btn btn-danger">Poista</button>
                 </form>
             </th>
         </tr>
