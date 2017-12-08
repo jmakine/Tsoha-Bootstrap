@@ -12,9 +12,15 @@ class TehtavaController extends BaseController {
         if (isset($params['tarkeys'])) {
             $options['tarkeys'] = $params['tarkeys'];
         }
+        if (isset($params['luokka'])) {
+            if($params['luokka']==''){
+                $options['luokka']=null;
+            } else {
+            $options['luokka'] = $params['luokka'];
+        }}
         $tehtavat = Tehtava::kaikki($options);
 
-        $luokat = array();
+        $luokat = Luokka::kaikki();
         $tehtavalista = array();
 
         foreach ($tehtavat as $tehtava) {
@@ -39,8 +45,9 @@ class TehtavaController extends BaseController {
                 'luotupvm' => $tehtava->luotupvm
             );
         }
+        $pvm = (new \DateTime())->format('Y-m-d');
 
-        View::make('tehtava/tehtavat.html', array('tehtavat' => $tehtavat, 'luokat' => $luokat, 'tehtavalista' => $tehtavalista));
+        View::make('tehtava/tehtavat.html', array('tehtavat' => $tehtavat, 'luokat' => $luokat, 'tehtavalista' => $tehtavalista, 'pvm'=> $pvm));
     }
 
     public static function yksitehtava($id) {

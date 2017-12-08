@@ -27,7 +27,7 @@
     <li><strong>Luokka: </strong><a style="font-size: 14" href="{{base_path}}/luokat/{{luokka.id}}">   {{luokka.nimi}}</a></li>
     <li><strong>Tärkeys: </strong> {% if tehtava.tarkeys == 'korkea' %}<a style="background-color: red; color: white; font-weight: bold; display: inline-block">{{tehtava.tarkeys}}</a>
                 {% elseif tehtava.tarkeys == 'matala' %}<a style="background-color: green; color: white; font-weight: bold; display: inline-block">{{tehtava.tarkeys}}</a>
-                {% elseif tehtava.tarkeys == 'neutraali' %}<a style="background-color: yellow; color: white; font-weight: bold; display: inline-block">{{tehtava.tarkeys}}</a>
+                {% elseif tehtava.tarkeys == 'neutraali' %}<a style="background-color: orange; color: white; font-weight: bold; display: inline-block">{{tehtava.tarkeys}}</a>
                 {% else %}<label>{{tehtava.tarkeys}}</label>
                 {% endif %}</li>
     <li><strong>Lisätty: </strong>   {{tehtava.luotupvm}}</li>

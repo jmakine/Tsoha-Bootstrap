@@ -57,6 +57,10 @@ class Tehtava extends BaseModel {
             $query_string .= ' AND tarkeys = :sel';
             $option['sel'] = $options['tarkeys'];
         }
+        if(isset($options['luokka'])) {
+            $query_string .= ' AND luokka_id = :sel';
+            $option['sel'] = $options['luokka'];
+        }
         $query_string .= ' ORDER BY deadline asc';
         
         $kysely = DB::connection()->prepare($query_string);
@@ -77,36 +81,6 @@ class Tehtava extends BaseModel {
         }
         return $tehtavat;
     }
-
-    //hakee luokka-olion tehtävän id:llä
-    /* public static function luokka($id){
-
-      $kysely = DB::connection()->prepare(''
-      . 'SELECT Luokka.id, Luokka.nimi, Luokka.kuvaus, Luokka.luokka_id, Luokka.luotu_pvm, Tehtava.id, Tehtava.luokka_id FROM Tehtava '
-      . 'INNER JOIN Luokka '
-      . 'ON Luokka.id = Tehtava.luokka_id '
-      . 'WHERE Tehtava.id = :id LIMIT 1');
-      $kysely->execute(array('id' => $id));
-      $row = $kysely->fetch();
-
-      if ($row) {
-
-      $luokka = new Luokka(array(
-      'id' => $row['id'],
-      'nimi' => $row['nimi'],
-      'kuvaus' => $row['kuvaus'],
-      'yliluokka' => $row['luokka_id'],
-      'luotupvm' => $row['luotu_pvm'],
-      //'tehtavat' = Luokka::tehtavat($row['id']);
-      'aliluokat' => Luokka::aliluokat($row['id'])
-      //'tehtavat_count' => count(Luokka::tehtavat($row['id'])),
-      //'aliluokka_count' => count(Luokka::aliluokat($row['id']))
-      ));
-
-      return $luokka;
-      }
-      return null;
-      } */
 
     public static function find($id) {
         $kysely = DB::connection()->prepare('SELECT * FROM Tehtava WHERE id = :id LIMIT 1');

@@ -81,13 +81,7 @@ class LuokkaController extends BaseController {
         $luokka = new Luokka($attributes);
         $error = $luokka->errors();
         $errors = array_merge($error, $nimi_on);
-
-        /* if (count($errors == 0)) {
-          $luokka->save();
-          Redirect::to('/luokat/' . $luokka->id, array('message' => 'Luokka lisätty!'));
-          } else {
-          View::make('/luokka/uusiluokka.html', array('errors' => $errors, 'attributes' => $attributes));
-          } */
+       
         if (count($errors == 0)) {
             $luokka->save();
             Redirect::to('/luokat/' . $luokka->id, array('message' => 'Luokka lisätty!'));
