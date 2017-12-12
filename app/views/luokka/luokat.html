@@ -16,13 +16,12 @@
 </p>
 
 <table class="table table-striped table-bordered">
-    
+
     <thead>
         <tr>
             <th>Nimi</th>
-            <!--<th>Aliluokkia</th>
-            <th>Tehtäviä</th>-->         
-            <th>Kuuluu luokkaan</th>
+            <th>Aliluokat</th>
+            <th>Tehtäviä</th>         
             <th>Luotu</th>
             <th></th>
             <th></th>
@@ -33,23 +32,23 @@
         {% for luokka in luokkalista %} 
         <tr>
             <td><a href="{{base_path}}/luokat/{{luokka.id}}">{{luokka.nimi}}</a></td> 
-            <!--
-            <td>{{luokka.aliluokka_count}}</a></td> 
-            <td>{{luokka.tehtavat_count}}</a></td> -->
-            
-            
-            <td><a href="{{base_path}}/luokat/{{luokka.yliluokka_id}}">{{luokka.yliluokka_nimi}}</a></td> 
+
+            <td>{% for aliluokka in luokka.aliluokat %}
+                <a href="{{base_path}}/luokat/{{aliluokka.id}}">
+                    {{aliluokka.nimi}} <br>
+                    {% endfor %}</a></td> 
+            <td>{{luokka.tehtavat_lkm}}</a></td>           
             <td>{{luokka.luotupvm}}</td>
             <th><a class="btn btn-default btn-sm" href="{{base_path}}/luokat/{{luokka.id}}/muokkaa" style="display: inline-block;">Muokkaa</a></th>
             <th>
                 <form method="post" action="{{base_path}}/luokat/{{luokka.id}}/poista" style="display: inline-block;">
-                <button type="submit" class="btn btn-danger">Poista</button>
+                    <button type="submit" class="btn btn-danger">Poista</button>
                 </form>
             </th>
-    </tr>
+        </tr>
         {% endfor %}
     </tbody>
-    
+
 </table>
 
 {% endblock %}

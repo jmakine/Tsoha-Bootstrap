@@ -6,7 +6,7 @@ class Tehtava extends BaseModel {
 
     public function __construct($attributes) {
         parent::__construct($attributes);
-        $this->validators = array('validate_nimi', 'validate_kuvaus', 'validate_deadline');
+        $this->validators = array('validate_nimi', 'validate_kuvaus');
     }
 
     public function validate_nimi() {
@@ -26,26 +26,6 @@ class Tehtava extends BaseModel {
         if (strlen($this->kuvaus) > 400) {
             $errors[] = 'Max. pituus tehtavan kuvaukselle 400 merkkiä!';
         }
-        return $errors;
-    }
-
-    //j.n.YY = 1.1.2018, dd.mm.YY = 01.01.2018 
-    public function validate_deadline() {
-        $errors = array();
-
-        /* if ($this->deadline == ""){          
-          $this->deadline = null;
-          return $errors;
-          }
-
-          //$date = DateTime::createFromFormat('j-M-Y', '15-Feb-2009');
-
-          $pvm = explode('.', $this->deadline);
-
-          if ($this->deadline != "" && !checkdate($pvm[1], $pvm[0], $pvm[2])) {
-          $errors[] = 'Päivämäärä ei kelpaa!';
-          } */
-
         return $errors;
     }
     

@@ -16,31 +16,43 @@ class LuokkaController extends BaseController {
                 $yliluokka_nimi = null;
                 $yliluokka_id = null;
             }
-
+            $aliluokat = array();
+            $alil = Luokka::aliluokat($luokka->id);
+            foreach ($alil as $aliluokka){
+                $aliluokat[] = array(
+                    'id'=> $aliluokka->id,
+                    'nimi'=> $aliluokka->nimi
+                );
+            }
+            
             $luokkalista[] = array(
                 'id' => $luokka->id,
                 'nimi' => $luokka->nimi,
                 'kuvaus' => $luokka->kuvaus,
                 'luotupvm' => $luokka->luotupvm,
                 'yliluokka_id' => $yliluokka_id,
-                'yliluokka_nimi' => $yliluokka_nimi
+                'yliluokka_nimi' => $yliluokka_nimi,
+                'aliluokat' => $aliluokat,
+                'tehtavat_lkm' => count($luokka->tehtavat)
             );
         }
-        View::make('luokka/luokat.html', array('luokat' => $luokat, 'luokkalista' => $luokkalista));
+        View::make('luokka/luokat.html', array('luokat' => $luokat, 'luokkalista' => $luokkalista, 'aliluokat' => $aliluokat));
     }
 
     public static function yksiluokka($id) {
         self::check_logged_in();
         $luokka = Luokka::find($id);
 
-        $aliluokat = Luokka::aliluokat($id); //palauttaa listan luokan (ali)luokka-olioita
-
         $yliluokka = $luokka->yliluokka;
         if ($yliluokka != NULL) {
             $yliluokka = Luokka::find($luokka->yliluokka);
-        } //yliluokka on id
-
-        View::make('luokka/luokka1.html', array('tehtava' => $luokka->tehtavat, 'yliluokka' => $yliluokka, 'luokka' => $luokka, 'aliluokat' => $aliluokat));
+        }
+        
+        View::make('luokka/luokka1.html', array(
+            'yliluokka' => $yliluokka, 
+            'luokka' => $luokka, 
+            'aliluokat' => $luokka->aliluokat, 
+            'tehtavat'=>$luokka->tehtavat));
     }
 
     public static function muokkaaluokka($id) {
@@ -48,8 +60,14 @@ class LuokkaController extends BaseController {
         $luokka = Luokka::find($id);
         $luokat = Luokka::kaikki();
         $yliluokka = Luokka::find($luokka->yliluokka);
-        //jatkokehitys: luokkalistaan ei anneta valittavaksi luokan aliluokkia, eli luokka ei voi sisältyä luokkaan, jonka se sisältää
-        View::make('luokka/luokanmuokkaus.html', array('yliluokka' => $yliluokka, 'attributes' => $luokka, 'luokat' => $luokat));
+        
+        $aliluokat = $luokka->aliluokat;
+        $aliluokat_id = array();
+        foreach ($aliluokat as $aliluokka){
+        $aliluokat_id[] = $aliluokka->id;
+        }
+        
+        View::make('luokka/luokanmuokkaus.html', array('yliluokka' => $yliluokka, 'attributes' => $luokka, 'luokat' => $luokat, 'aliluokat'=>$aliluokat_id));
     }
 
     public static function uusiluokka() {
@@ -81,12 +99,12 @@ class LuokkaController extends BaseController {
         $luokka = new Luokka($attributes);
         $error = $luokka->errors();
         $errors = array_merge($error, $nimi_on);
-       
-        if (count($errors == 0)) {
+             
+        if (count($errors) > 0) {
+            View::make('luokka/uusiluokka.html', array('errors' => $errors, 'attributes' => $attributes));
+        } else {
             $luokka->save();
             Redirect::to('/luokat/' . $luokka->id, array('message' => 'Luokka lisätty!'));
-        } else {
-            View::make('/luokka/uusiluokka.html', array('errors' => $errors, 'attributes' => $attributes));
         }
     }
 
@@ -107,7 +125,8 @@ class LuokkaController extends BaseController {
         );
 
         $luokka = new Luokka($attributes);
-        $errors = $luokka->errors();
+        $error1 = $luokka->errors();
+        $error2 = array();
 
         //jos nimeä muutettu, katsotaan ettei ole jo olemassa:        
         if (Luokka::find($id)->nimi != $params['nimi']) {
@@ -117,9 +136,11 @@ class LuokkaController extends BaseController {
                 $kaikki_nimet[] = $yksi->nimi;
             }
             if (in_array($params['nimi'], $kaikki_nimet)) {
-                $errors[] = 'Tämän niminen luokka on jo olemassa! Keksippä joku muu.';
+                $error2[] = 'Tämän niminen luokka on jo olemassa! Keksippä joku muu.';
             }
         }
+        
+        $errors = array_merge($error1, $error2);
 
         if (count($errors) > 0) {
             View::make('luokka/luokanmuokkaus.html', array('errors' => $errors, 'attributes' => $attributes));
@@ -131,10 +152,8 @@ class LuokkaController extends BaseController {
 
     public static function poista($id) {
         self::check_logged_in();
-        //alustetaan Luokka-olio annetulla $id:llä
         $luokka = new Luokka(array('id' => $id));
         //jos luokka ei sisällä muita luokkia, sen voi poistaa, muuten ohjataan käyttäjä luokkien listaussivulle virheilmoituksen kera
-        //luokan sisältäviltä tehtäviltä poistuu luokkatieto, mutta tehtävä ei poistu
         if (Luokka::aliluokat($luokka->id) == null) {
             $luokka->delete();
             Redirect::to('/luokat', array('message' => 'Luokka poistettu!'));

@@ -17,4 +17,4 @@ Yleisiä linkkejä:
 ## Työn aihe
 
 Aiheena on Muistilista. [Linkki valmiiseen aiheeseen](http://advancedkittenry.github.io/suunnittelu_ja_tyoymparisto/aiheet/Muistilista.html) 
-Pienin muutoksin, mm. tehtäville voi asettaa määräajan. 
+Pienin muutoksin. 

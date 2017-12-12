@@ -1,6 +1,5 @@
 {% extends "base.html" %}
 {% block content %}
-<!--käytössä ('attributes' => $tehtava), ('errors' => $errors) ja ('luokat' => $luokat)-->
 
 {% if errors %}
 <div class="alert alert-danger">
@@ -25,7 +24,7 @@
 
     <div class="form-group">
         <label>Määräpäivä</label>
-        <input type="text" name="deadline" class="form-control" value="{{attributes.deadline}}">
+        <input type="date" name="deadline" class="form-control" value="{{attributes.deadline}}">
     </div>
 
     <div class="form-group">
@@ -57,7 +56,7 @@
         </textarea>
     </div>
 
-    <div class="form-group"> <!--ei toimi jos luokkaa ei muuta, yrittää update luokan nimen luokka.id:ksi -->
+    <div class="form-group"> 
         <label>Luokka</label>
         <select name="luokka" class="form-control"> 
             <option selected value="{{luokka.id}}">{{luokka.nimi}}</option>   

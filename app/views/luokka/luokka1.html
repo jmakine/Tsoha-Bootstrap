@@ -22,18 +22,22 @@
         <br>
         <li><strong>Kuuluu luokkaan: </strong><a href="{{base_path}}/luokat/{{yliluokka.id}}">{{yliluokka.nimi}}</a></li>
         <li><strong>Luotu: </strong>{{luokka.luotupvm}}</li>
-        <!--<li><strong>Luokan tehtävät: ({{luokka.tehtavia_count}} kpl)</strong></li>
-                <ul>
-                    {% for tehtava in tehtavat %}
-                    <li><a href="{{base_path}}/tehtavat/{{tehtava.id}}">{{tehtava.nimi}}</a></li>
-                    {% endfor %}
-                </ul>-->
+
     </ul>
 </div>
 
 <div>
     <p> <strong>Kuvaus:</strong></p>
     <p>{{luokka.kuvaus}}</p>
+</div>
+
+<div>
+    <p><strong>Luokan tehtävät: </strong></p>
+    <ul>
+        {% for tehtava in tehtavat %}
+        <li><a href="{{base_path}}/tehtavat/{{tehtava.id}}">{{tehtava.nimi}}</a></li>
+        {% endfor %}
+    </ul>
 </div>
 
 <div>

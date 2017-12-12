@@ -20,12 +20,3 @@ VALUES ('Maksa laskut', '15.11.2017', NOW(),'sähkö, netti, vuokra, visa,...', 
         ('Testi1', '20.11.2017', NOW(), NULL, 'korkea', 3, 1),
         ('Testi2', NULL, NOW(),'123', 'matala', 3, 1),
         ('Testi3', '12.12.2017', NOW(),'diibadaa', NULL, 4, 1);
-
---Luokantehtavat -taulun testi-data
---INSERT INTO Luokantehtavat(luokka_id, tehtava_id) 
---VALUES (1, 1), (1, 2), (2, 3), (2, 4), (3, 7), (3, 8), (4, 9);
-
---LuokanLuokat -taulun testi-data. Ensimmäinen Luokka_id = yliluokka (PRIMARY KEY)
---INSERT INTO Luokanluokat(aliluokka, yliluokka) 
---VALUES (4, 3);
-

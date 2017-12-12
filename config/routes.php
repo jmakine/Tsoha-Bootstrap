@@ -20,7 +20,7 @@ $routes->get('/hiekkalaatikko', function() {
     HelloWorldController::sandbox();
 });
 
-
+//TEHTÄVÄ:
 //tehtavien listaussivu:
 $routes->get('/tehtavat', function() {
     TehtavaController::tehtavat();
@@ -56,9 +56,7 @@ $routes->post('/tehtavat/:id/poista', function($id) {
     TehtavaController::poista($id);
 });
 
-//LUOKKAAN LIITTYVÄT:
-//<form method="post" action="{{base_path}}/luokat"> :uusiluokka.html:ssä
-//tallentaa ja ohjaa luokan esittelysivulle tai sitten ohjaa luokan esittelysivulle virheilmoituksen kera tallentamatta: 
+//LUOKKA:
 //luokan lisääminen kantaan
 $routes->post('/luokat', function() {
     LuokkaController::talleta();

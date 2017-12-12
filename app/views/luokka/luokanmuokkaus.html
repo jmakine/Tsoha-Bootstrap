@@ -1,6 +1,5 @@
 {% extends "base.html" %}
 {% block content %}
-<!-- käytössä 'attributes' luokan attribuuteista ja 'errors' virheistä-->
 
 {% if errors %}
   <div class="alert alert-danger">
@@ -27,7 +26,7 @@
         <select name="yliluokka" class="form-control"> 
             <option selected value="{{yliluokka.id}}">{{yliluokka.nimi}}</option>    
             {% for luokka in luokat %} 
-            {% if luokka.id != yliluokka.id and luokka.id != attributes.id %} <!-- and luokka.id not in luokka.aliluokat %} ei voi sisältyä aliluokkaansa ... -->
+            {% if luokka.id != yliluokka.id and luokka.id != attributes.id and luokka.id not in aliluokat %} 
             <option value="{{luokka.id}}">{{luokka.nimi}}</option>           
             {% endif %}
             {% endfor %}

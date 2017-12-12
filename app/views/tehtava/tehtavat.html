@@ -24,15 +24,13 @@
     <a href="{{base_path}}/tehtavat/lisaa" class="btn btn-success">Lisää tehtävä</a>
 </p>
 
-
 <h4>Tärkeys:</h4>
 <div class="form-group">
     <form method="get" action="" class="form-inline">
         <select class="form-control" name="tarkeys">  
-            <option></option>
             <option value="korkea" style="color: red; font-weight: bold">Korkea</option>
             <option value="neutraali" style="color: orange; font-weight: bold">Neutraali</option>
-            <option value="matala" style="color: green; font-weight: bold;">Matala</option>   
+            <option value="matala" style="color: green; font-weight: bold">Matala</option>   
             <option value="" style="color: grey">Ei tärkeyttä</option>
         </select>
         <div class="btn-group"> <button type="submit" class="btn btn-default">Näytä</button> <a href="{{base_path}}/tehtavat" class="btn btn-default">Näytä kaikki</a> </div>
@@ -42,19 +40,16 @@
     <div class="form-group">
         <form method="get" action="" class="form-inline">
             <select class="form-control" name="luokka">
-                <option></option>
                 {% for luokka in luokat %}
                 <option value="{{luokka.id}}">{{luokka.nimi}}</option>
-                {% endfor %}
-                <option value="">Ei luokkaa</option>
+                {% endfor %}               
             </select>
             <div class="btn-group"><button type="submit" class="btn btn-default">Näytä</button><a href="{{base_path}}/tehtavat" class="btn btn-default">Näytä kaikki</a></div>
         </form>
 
-
     </div>
 
-    <table id="myTable" class="table table-striped table-bordered">
+    <table class="table table-striped table-bordered">
         <thead>
             <tr>
                 <th>Nimi</th>

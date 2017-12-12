@@ -2,7 +2,7 @@
 
 class Luokka extends BaseModel {
 
-    public $id, $nimi, $kuvaus, $yliluokka, $luotupvm, $aliluokat, $tehtavat, $aliluokka_count, $tehtavat_count;
+    public $id, $nimi, $kuvaus, $yliluokka, $luotupvm, $aliluokat, $tehtavat;
 
     public function __construct($attributes) {
         parent::__construct($attributes);
@@ -46,10 +46,8 @@ class Luokka extends BaseModel {
                 'kuvaus' => $row['kuvaus'],
                 'yliluokka' => $row['luokka_id'],
                 'luotupvm' => $row['luotu_pvm'],
-                //'tehtavat' => Luokka::tehtavat($row['id']),
-                //'tehtavat_count' => count(Luokka::tehtavat($row['id'])),
-                //'aliluokat' => Luokka::aliluokat($row['id'])
-                //'aliluokka_count' => count(Luokka::aliluokat($row['id']))
+                'tehtavat' => Luokka::tehtavat($row['id']),
+                                'aliluokat' => Luokka::aliluokat($row['id'])
             ));
         }
         return $luokat;
@@ -68,10 +66,8 @@ class Luokka extends BaseModel {
                 'kuvaus' => $row['kuvaus'],
                 'yliluokka' => $row['luokka_id'],
                 'luotupvm' => $row['luotu_pvm'],
-                //'tehtavat' = Luokka::tehtavat($row['id']);
+                'tehtavat' => Luokka::tehtavat($row['id']),
                 'aliluokat' => Luokka::aliluokat($row['id'])
-                //'tehtavat_count' => count(Luokka::tehtavat($row['id'])),
-                //'aliluokka_count' => count(Luokka::aliluokat($row['id']))
             ));
 
             return $luokka;
@@ -79,7 +75,6 @@ class Luokka extends BaseModel {
         return null;
     }
 
-    //palauttaa uuden taulukon luokkia, joiden yliluokka on tarkasteltava luokka
     public static function aliluokat($luokka_id) {
         $kysely = DB::connection()->prepare('SELECT * FROM Luokka WHERE luokka_id = :luokka_id AND kayttaja_id = :kayttaja_id');
         $kysely->execute(array('luokka_id' => $luokka_id, 'kayttaja_id'=>$_SESSION['user']));
@@ -93,13 +88,9 @@ class Luokka extends BaseModel {
                 'nimi' => $row['nimi'],
                 'kuvaus' => $row['kuvaus'],
                 'yliluokka' => $row['luokka_id'],
-                'luotupvm' => $row['luotu_pvm']
-                //'tehtavat' => Luokka::tehtavat($row['id']),
-                //'tehtavat_count' => count(Luokka::tehtavat($row['id'])),
-                //'aliluokat' => Luokka::aliluokat($row['id'])
-                //'aliluokka_count' => count(Luokka::aliluokat($row['id']))
+                'luotupvm' => $row['luotu_pvm'],
+                'tehtavat' => Luokka::tehtavat($row['id'])
             ));
-
         }
         return $aliluokat;
     }
@@ -119,9 +110,9 @@ class Luokka extends BaseModel {
                 'luotupvm' => $row['luotu_pvm'],
                 'tarkeys' => $row['tarkeys'],
                 'deadline' => $row['deadline']
-            ));
-            return $tehtavat;
+            ));          
         }
+        return $tehtavat;
     }
 
     public function save() {
